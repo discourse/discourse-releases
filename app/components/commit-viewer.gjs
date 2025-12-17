@@ -32,6 +32,8 @@ export default class CommitViewer extends Component {
   @tracked hiddenTypes = new Set();
   @tracked newFeatures = [];
   @tracked matchingFeatures = [];
+  @tracked startAdvancedMode = false;
+  @tracked endAdvancedMode = false;
 
   constructor() {
     super(...arguments);
@@ -151,6 +153,42 @@ export default class CommitViewer extends Component {
 
   @action
   updateEndHash(event) {
+    this.endHash = event.target.value;
+    this.updateQueryParams();
+    this.updateCommitRange();
+  }
+
+  @action
+  toggleStartAdvancedMode() {
+    this.startAdvancedMode = !this.startAdvancedMode;
+    if (!this.startAdvancedMode) {
+      // Reset to first option when leaving advanced mode
+      this.startHash = this.commitData?.baseTag || '';
+      this.updateQueryParams();
+      this.updateCommitRange();
+    }
+  }
+
+  @action
+  toggleEndAdvancedMode() {
+    this.endAdvancedMode = !this.endAdvancedMode;
+    if (!this.endAdvancedMode) {
+      // Reset to first option when leaving advanced mode
+      this.endHash = '';
+      this.updateQueryParams();
+      this.updateCommitRange();
+    }
+  }
+
+  @action
+  updateStartRef(event) {
+    this.startHash = event.target.value;
+    this.updateQueryParams();
+    this.updateCommitRange();
+  }
+
+  @action
+  updateEndRef(event) {
     this.endHash = event.target.value;
     this.updateQueryParams();
     this.updateCommitRange();
@@ -301,6 +339,33 @@ export default class CommitViewer extends Component {
     return counts;
   }
 
+  get sortedRefs() {
+    if (!this.commitData) return [];
+
+    const refs = [];
+
+    // Add branches first
+    Object.keys(this.commitData.refs.branches).forEach((branch) => {
+      refs.push({ value: branch, label: branch, type: 'branch' });
+    });
+
+    // Add tags sorted in descending order
+    const tags = Object.keys(this.commitData.refs.tags).sort((a, b) => {
+      const aVersion = semver.coerce(a);
+      const bVersion = semver.coerce(b);
+      if (aVersion && bVersion) {
+        return semver.rcompare(aVersion, bVersion);
+      }
+      return b.localeCompare(a);
+    });
+
+    tags.forEach((tag) => {
+      refs.push({ value: tag, label: tag, type: 'tag' });
+    });
+
+    return refs;
+  }
+
   <template>
     <div class="commit-viewer">
       <div class="header">
@@ -310,27 +375,80 @@ export default class CommitViewer extends Component {
 
       <div class="form-section">
         <div class="input-group">
-          <label for="start-hash">Start Commit (optional):</label>
-          <input
-            id="start-hash"
-            type="text"
-            value={{this.startHash}}
-            placeholder="Leave empty for first commit, or enter commit hash..."
-            {{on "input" this.updateStartHash}}
-          />
-          <small class="input-help">Enter a commit hash (full or partial) or leave empty to start from the beginning</small>
+          <div class="input-header">
+            <label for="start-ref">Start:</label>
+            <button
+              type="button"
+              class="advanced-toggle"
+              {{on "click" this.toggleStartAdvancedMode}}
+            >
+              {{if this.startAdvancedMode "Use Dropdown" "Advanced"}}
+            </button>
+          </div>
+
+          {{#if this.startAdvancedMode}}
+            <input
+              id="start-ref"
+              type="text"
+              value={{this.startHash}}
+              placeholder="Enter commit hash..."
+              {{on "input" this.updateStartHash}}
+            />
+            <small class="input-help">Enter a specific commit hash (full or partial)</small>
+          {{else}}
+            <select
+              id="start-ref"
+              value={{if this.startHash this.startHash this.commitData.baseTag}}
+              {{on "change" this.updateStartRef}}
+            >
+              <option value={{this.commitData.baseTag}}>
+                {{this.commitData.baseTag}} (base)
+              </option>
+              {{#each this.sortedRefs as |ref|}}
+                <option value={{ref.value}}>
+                  {{ref.label}}
+                </option>
+              {{/each}}
+            </select>
+            <small class="input-help">Select a tag or branch to start from</small>
+          {{/if}}
         </div>
 
         <div class="input-group">
-          <label for="end-hash">End Commit (optional):</label>
-          <input
-            id="end-hash"
-            type="text"
-            value={{this.endHash}}
-            placeholder="Leave empty for latest commit, or enter commit hash..."
-            {{on "input" this.updateEndHash}}
-          />
-          <small class="input-help">Enter a commit hash (full or partial) or leave empty to show up to the latest</small>
+          <div class="input-header">
+            <label for="end-ref">End:</label>
+            <button
+              type="button"
+              class="advanced-toggle"
+              {{on "click" this.toggleEndAdvancedMode}}
+            >
+              {{if this.endAdvancedMode "Use Dropdown" "Advanced"}}
+            </button>
+          </div>
+
+          {{#if this.endAdvancedMode}}
+            <input
+              id="end-ref"
+              type="text"
+              value={{this.endHash}}
+              placeholder="Enter commit hash..."
+              {{on "input" this.updateEndHash}}
+            />
+            <small class="input-help">Enter a specific commit hash (full or partial)</small>
+          {{else}}
+            <select
+              id="end-ref"
+              value={{if this.endHash this.endHash "main"}}
+              {{on "change" this.updateEndRef}}
+            >
+              {{#each this.sortedRefs as |ref|}}
+                <option value={{ref.value}}>
+                  {{ref.label}}
+                </option>
+              {{/each}}
+            </select>
+            <small class="input-help">Select a tag or branch to end at</small>
+          {{/if}}
         </div>
       </div>
 

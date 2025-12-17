@@ -41,25 +41,55 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
 .input-group label {
   display: block;
-  margin-bottom: 0.5rem;
   font-weight: 600;
   color: #2c3e50;
 }
 
-.input-group input {
+.advanced-toggle {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid #3498db;
+  background: white;
+  color: #3498db;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.advanced-toggle:hover {
+  background: #3498db;
+  color: white;
+}
+
+.input-group input,
+.input-group select {
   width: 100%;
   padding: 0.75rem;
   border: 2px solid #e1e8ed;
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s;
+  background: white;
 }
 
-.input-group input:focus {
+.input-group input:focus,
+.input-group select:focus {
   outline: none;
   border-color: #3498db;
+}
+
+.input-group select {
+  cursor: pointer;
 }
 
 .input-help {
