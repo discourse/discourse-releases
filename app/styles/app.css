@@ -114,6 +114,61 @@ body {
   gap: 1rem;
 }
 
+.filter-section {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  margin-bottom: 2rem;
+}
+
+.filter-section label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-pill {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--pill-color);
+  background-color: var(--pill-color);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
+}
+
+.filter-pill.hidden {
+  background-color: transparent;
+  color: var(--pill-color);
+  opacity: 0.5;
+}
+
+.commit-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
 /* Responsive design */
 @media (width <= 768px) {
   body {

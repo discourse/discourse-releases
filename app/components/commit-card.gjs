@@ -10,6 +10,16 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+const COMMIT_TYPE_CONFIG = {
+  FEATURE: { label: 'Feature', color: '#2ecc71' },
+  FIX: { label: 'Fix', color: '#e74c3c' },
+  PERF: { label: 'Performance', color: '#9b59b6' },
+  UX: { label: 'UX', color: '#3498db' },
+  A11Y: { label: 'Accessibility', color: '#1abc9c' },
+  SECURITY: { label: 'Security', color: '#e67e22' },
+  DEV: { label: 'Dev', color: '#95a5a6' },
+};
+
 export default class CommitCard extends Component {
   get commitUrl() {
     return `https://github.com/discourse/discourse/commit/${this.args.commit.hash}`;
@@ -27,6 +37,17 @@ export default class CommitCard extends Component {
   get formattedTime() {
     const date = new Date(this.args.commit.date);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  get commitType() {
+    const match = this.args.commit.subject.match(
+      /^(FEATURE|FIX|PERF|UX|A11Y|SECURITY|DEV):/
+    );
+    return match ? match[1] : null;
+  }
+
+  get commitTypeConfig() {
+    return this.commitType ? COMMIT_TYPE_CONFIG[this.commitType] : null;
   }
 
   get subjectWithLinks() {
@@ -67,6 +88,12 @@ export default class CommitCard extends Component {
       </div>
 
       <div class="commit-message">
+        {{#if this.commitTypeConfig}}
+          <span
+            class="commit-badge"
+            style="background-color: {{this.commitTypeConfig.color}}"
+          >{{this.commitTypeConfig.label}}</span>
+        {{/if}}
         {{this.subjectWithLinks}}
       </div>
 
