@@ -1,10 +1,11 @@
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
+import { tracked, cached } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { fn } from '@ember/helper';
+import { fn, concat } from '@ember/helper';
 import { get } from '@ember/helper';
+import { htmlSafe } from '@ember/template';
 import semver from 'semver';
 import CommitCard from './commit-card';
 import FeatureCard from './feature-card';
@@ -23,15 +24,12 @@ const COMMIT_TYPES = [
 
 export default class CommitViewer extends Component {
   @service router;
-  @tracked commits = [];
   @tracked isLoading = false;
-  @tracked error = null;
   @tracked startHash = '';
   @tracked endHash = '';
   @tracked commitData = null; // {commits: {}, refs: {}, baseTag: ''}
   @tracked hiddenTypes = new Set();
   @tracked newFeatures = [];
-  @tracked matchingFeatures = [];
   @tracked startAdvancedMode = false;
   @tracked endAdvancedMode = false;
 
@@ -94,7 +92,11 @@ export default class CommitViewer extends Component {
       const currentHash = queue.shift();
 
       // Skip if already visited or not in our dataset
-      if (!currentHash || visited.has(currentHash) || !this.commitData.commits[currentHash]) {
+      if (
+        !currentHash ||
+        visited.has(currentHash) ||
+        !this.commitData.commits[currentHash]
+      ) {
         continue;
       }
 
@@ -134,28 +136,27 @@ export default class CommitViewer extends Component {
     );
 
     // Convert to commit objects
-    return [...betweenSet].map((hash) => this.commitData.commits[hash]).filter((c) => c);
+    return [...betweenSet]
+      .map((hash) => this.commitData.commits[hash])
+      .filter((c) => c);
   }
 
   loadQueryParams() {
     const queryParams = this.router.currentRoute.queryParams;
     this.startHash = queryParams.start || '';
     this.endHash = queryParams.end || '';
-    this.updateCommitRange();
   }
 
   @action
   updateStartHash(event) {
     this.startHash = event.target.value;
     this.updateQueryParams();
-    this.updateCommitRange();
   }
 
   @action
   updateEndHash(event) {
     this.endHash = event.target.value;
     this.updateQueryParams();
-    this.updateCommitRange();
   }
 
   @action
@@ -165,7 +166,6 @@ export default class CommitViewer extends Component {
       // Reset to first option when leaving advanced mode
       this.startHash = this.commitData?.baseTag || '';
       this.updateQueryParams();
-      this.updateCommitRange();
     }
   }
 
@@ -176,7 +176,6 @@ export default class CommitViewer extends Component {
       // Reset to first option when leaving advanced mode
       this.endHash = '';
       this.updateQueryParams();
-      this.updateCommitRange();
     }
   }
 
@@ -184,30 +183,23 @@ export default class CommitViewer extends Component {
   updateStartRef(event) {
     this.startHash = event.target.value;
     this.updateQueryParams();
-    this.updateCommitRange();
   }
 
   @action
   updateEndRef(event) {
     this.endHash = event.target.value;
     this.updateQueryParams();
-    this.updateCommitRange();
   }
 
-  updateCommitRange() {
-    if (!this.commitData) return;
+  @cached
+  get commits() {
+    if (!this.commitData) return [];
 
     const startRef = this.startHash.trim() || this.commitData.baseTag;
     const endRef = this.endHash.trim() || 'main';
 
     // Get commits between the two refs using graph traversal
     let filtered = this.getCommitsBetween(startRef, endRef);
-
-    if (filtered.length === 0 && (this.startHash.trim() || this.endHash.trim())) {
-      this.error = `No commits found between "${startRef}" and "${endRef}"`;
-      this.commits = [];
-      return;
-    }
 
     // Filter by commit type
     if (this.hiddenTypes.size > 0) {
@@ -217,15 +209,30 @@ export default class CommitViewer extends Component {
       });
     }
 
-    this.error = null;
-    this.commits = filtered;
-    this.updateMatchingFeatures();
+    return filtered;
   }
 
-  updateMatchingFeatures() {
+  @cached
+  get error() {
+    if (!this.commitData) return null;
+
+    // If user has specified custom refs and we got no commits, show error
+    if (
+      this.commits.length === 0 &&
+      (this.startHash.trim() || this.endHash.trim())
+    ) {
+      const startRef = this.startHash.trim() || this.commitData.baseTag;
+      const endRef = this.endHash.trim() || 'main';
+      return `No commits found between "${startRef}" and "${endRef}"`;
+    }
+
+    return null;
+  }
+
+  @cached
+  get matchingFeatures() {
     if (!this.commits.length || !this.newFeatures.length) {
-      this.matchingFeatures = [];
-      return;
+      return [];
     }
 
     // Create a Set of commit hashes for quick lookup
@@ -253,12 +260,15 @@ export default class CommitViewer extends Component {
     }
 
     // Find features that match either by hash or by version
-    this.matchingFeatures = this.newFeatures.filter((feature) => {
+    return this.newFeatures.filter((feature) => {
       const discourseVersion = feature.discourse_version;
       if (!discourseVersion) return false;
 
       // Check if it's a full hash (40 characters) and if it matches any commit
-      if (discourseVersion.length === 40 && commitHashes.has(discourseVersion)) {
+      if (
+        discourseVersion.length === 40 &&
+        commitHashes.has(discourseVersion)
+      ) {
         return true;
       }
 
@@ -295,7 +305,6 @@ export default class CommitViewer extends Component {
       this.hiddenTypes.add(typeKey);
     }
     this.hiddenTypes = new Set(this.hiddenTypes); // Trigger reactivity
-    this.updateCommitRange();
   }
 
   updateQueryParams() {
@@ -319,15 +328,14 @@ export default class CommitViewer extends Component {
     return COMMIT_TYPES;
   }
 
+  @cached
   get commitTypeCounts() {
     const counts = {};
-    COMMIT_TYPES.forEach(type => {
+    COMMIT_TYPES.forEach((type) => {
       counts[type.key] = 0;
     });
 
-    if (!this.commitData) return counts;
-
-    Object.values(this.commitData.commits).forEach(commit => {
+    this.commits.forEach((commit) => {
       const type = this.getCommitType(commit.subject);
       if (type && counts[type] !== undefined) {
         counts[type]++;
@@ -394,7 +402,8 @@ export default class CommitViewer extends Component {
               placeholder="Enter commit hash..."
               {{on "input" this.updateStartHash}}
             />
-            <small class="input-help">Enter a specific commit hash (full or partial)</small>
+            <small class="input-help">Enter a specific commit hash (full or
+              partial)</small>
           {{else}}
             <select
               id="start-ref"
@@ -402,7 +411,8 @@ export default class CommitViewer extends Component {
               {{on "change" this.updateStartRef}}
             >
               <option value={{this.commitData.baseTag}}>
-                {{this.commitData.baseTag}} (base)
+                {{this.commitData.baseTag}}
+                (base)
               </option>
               {{#each this.sortedRefs as |ref|}}
                 <option value={{ref.value}}>
@@ -434,7 +444,8 @@ export default class CommitViewer extends Component {
               placeholder="Enter commit hash..."
               {{on "input" this.updateEndHash}}
             />
-            <small class="input-help">Enter a specific commit hash (full or partial)</small>
+            <small class="input-help">Enter a specific commit hash (full or
+              partial)</small>
           {{else}}
             <select
               id="end-ref"
@@ -453,30 +464,34 @@ export default class CommitViewer extends Component {
       </div>
 
       {{#if this.matchingFeatures.length}}
-        <div class="section-header">
-          <h2>Highlights</h2>
-        </div>
-        <div class="features-section">
-          {{#each this.matchingFeatures as |feature|}}
-            <FeatureCard @feature={{feature}} />
-          {{/each}}
-        </div>
+        <details class="collapsible-section" open>
+          <summary class="section-header">
+            <h2>Highlights</h2>
+          </summary>
+          <div class="features-section">
+            {{#each this.matchingFeatures as |feature|}}
+              <FeatureCard @feature={{feature}} />
+            {{/each}}
+          </div>
+        </details>
       {{/if}}
 
-      <div class="section-header">
-        <h2>Detailed Changes</h2>
-      </div>
+      <details class="collapsible-section" open>
+        <summary class="section-header">
+          <h2>Detailed Changes</h2>
+        </summary>
 
-      <div class="filter-section">
+        <div class="filter-section">
         <div class="filter-pills">
           {{#each this.commitTypes as |type|}}
             <button
               type="button"
               class="filter-pill {{if (this.isTypeHidden type.key) 'hidden'}}"
-              style="--pill-color: {{type.color}}"
+              style={{htmlSafe (concat "--pill-color: " type.color)}}
               {{on "click" (fn this.toggleCommitType type.key)}}
             >
-              {{type.label}} ({{get this.commitTypeCounts type.key}})
+              {{type.label}}
+              ({{get this.commitTypeCounts type.key}})
             </button>
           {{/each}}
         </div>
@@ -506,6 +521,7 @@ export default class CommitViewer extends Component {
           <CommitCard @commit={{commit}} />
         </VerticalCollection>
       {{/if}}
+      </details>
     </div>
   </template>
 }

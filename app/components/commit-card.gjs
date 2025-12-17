@@ -3,6 +3,7 @@ import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { htmlSafe } from '@ember/template';
 import './commit-card.css';
+import { concat } from '@ember/helper';
 
 function escapeHtml(text) {
   const div = document.createElement('div');
@@ -77,7 +78,9 @@ export default class CommitCard extends Component {
           {{#if this.commitTypeConfig}}
             <span
               class="commit-badge"
-              style="background-color: {{this.commitTypeConfig.color}}"
+              style={{htmlSafe
+                (concat "background-color: " this.commitTypeConfig.color)
+              }}
             >{{this.commitTypeConfig.label}}</span>
           {{/if}}
           <span class="commit-sha">
@@ -88,7 +91,9 @@ export default class CommitCard extends Component {
 
       <div class="commit-meta">
         <span class="commit-author">{{@commit.author}}</span>
-        <span class="commit-date">{{this.formattedDate}} · {{this.formattedTime}}</span>
+        <span class="commit-date">{{this.formattedDate}}
+          ·
+          {{this.formattedTime}}</span>
       </div>
     </div>
   </template>

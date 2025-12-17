@@ -144,11 +144,25 @@ body {
   gap: 1rem;
 }
 
+.collapsible-section {
+  margin-bottom: 2rem;
+}
+
 .section-header {
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+summary.section-header {
+  list-style: none;
+}
+
+summary.section-header::-webkit-details-marker {
+  display: none;
 }
 
 .section-header::before,
@@ -165,6 +179,22 @@ body {
   font-weight: 700;
   padding: 0 1.5rem;
   white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.section-header:hover h2 {
+  opacity: 0.7;
+}
+
+.section-header h2::before {
+  content: '▼ ';
+  display: inline-block;
+  margin-right: 0.5rem;
+  transition: transform 0.2s;
+}
+
+details:not([open]) .section-header h2::before {
+  transform: rotate(-90deg);
 }
 
 .features-section {
