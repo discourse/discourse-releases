@@ -40,11 +40,23 @@ export class ChangelogData {
 
     // Add tags sorted in descending order
     const tags = Object.keys(this.commitData.refs.tags).sort((a, b) => {
-      const aVersion = semver.coerce(a);
-      const bVersion = semver.coerce(b);
+      // Convert beta notation to proper semver prerelease format
+      // v3.5.0.beta1 -> v3.5.0-beta.1
+      const normalizeTag = (tag) => {
+        return tag.replace(/\.beta(\d+)$/, '-beta.$1');
+      };
+
+      const aNormalized = normalizeTag(a);
+      const bNormalized = normalizeTag(b);
+
+      const aVersion = semver.valid(aNormalized);
+      const bVersion = semver.valid(bNormalized);
+
       if (aVersion && bVersion) {
         return semver.rcompare(aVersion, bVersion);
       }
+
+      // If semver parsing fails, fall back to string comparison
       return b.localeCompare(a);
     });
 
