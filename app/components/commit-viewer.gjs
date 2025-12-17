@@ -5,7 +5,9 @@ import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { get } from '@ember/helper';
+import semver from 'semver';
 import CommitCard from './commit-card';
+import FeatureCard from './feature-card';
 import VerticalCollection from '@html-next/vertical-collection/components/vertical-collection/component';
 
 const COMMIT_TYPES = [
@@ -28,20 +30,26 @@ export default class CommitViewer extends Component {
   @tracked endHash = '';
   @tracked allCommits = [];
   @tracked hiddenTypes = new Set();
+  @tracked newFeatures = [];
+  @tracked matchingFeatures = [];
 
   constructor() {
     super(...arguments);
-    this.loadCommitData();
+    this.loadData();
   }
 
-  async loadCommitData() {
+  async loadData() {
     this.isLoading = true;
     try {
-      const module = await import('/data/commits.json');
-      this.allCommits = module.default;
+      const [commitsModule, featuresModule] = await Promise.all([
+        import('/data/commits.json'),
+        import('/data/new-features.json'),
+      ]);
+      this.allCommits = commitsModule.default;
+      this.newFeatures = featuresModule.default;
       this.loadQueryParams();
     } catch (error) {
-      this.error = `Failed to load commit data: ${error.message}`;
+      this.error = `Failed to load data: ${error.message}`;
     } finally {
       this.isLoading = false;
     }
@@ -113,6 +121,62 @@ export default class CommitViewer extends Component {
 
     this.error = null;
     this.commits = filtered;
+    this.updateMatchingFeatures();
+  }
+
+  updateMatchingFeatures() {
+    if (!this.commits.length || !this.newFeatures.length) {
+      this.matchingFeatures = [];
+      return;
+    }
+
+    // Create a Set of commit hashes for quick lookup
+    const commitHashes = new Set(this.commits.map((c) => c.hash));
+
+    // Get version range from commits (strip +### suffix for comparison)
+    const versions = this.commits
+      .map((c) => c.version?.replace(/\s*\+\d+$/, ''))
+      .filter((v) => v && semver.valid(semver.coerce(v)));
+
+    let oldestVersion = null;
+    let newestVersion = null;
+
+    if (versions.length > 0) {
+      // Sort versions to find min/max
+      const sortedVersions = versions
+        .map((v) => semver.coerce(v))
+        .filter((v) => v)
+        .sort(semver.compare);
+
+      if (sortedVersions.length > 0) {
+        oldestVersion = sortedVersions[0];
+        newestVersion = sortedVersions[sortedVersions.length - 1];
+      }
+    }
+
+    // Find features that match either by hash or by version
+    this.matchingFeatures = this.newFeatures.filter((feature) => {
+      const discourseVersion = feature.discourse_version;
+      if (!discourseVersion) return false;
+
+      // Check if it's a full hash (40 characters) and if it matches any commit
+      if (discourseVersion.length === 40 && commitHashes.has(discourseVersion)) {
+        return true;
+      }
+
+      // Otherwise, try semver comparison
+      if (oldestVersion && newestVersion) {
+        const featureVersion = semver.coerce(discourseVersion);
+        if (featureVersion) {
+          return (
+            semver.gte(featureVersion, oldestVersion) &&
+            semver.lte(featureVersion, newestVersion)
+          );
+        }
+      }
+
+      return false;
+    });
   }
 
   getCommitType(subject) {
@@ -208,6 +272,21 @@ export default class CommitViewer extends Component {
         </div>
       </div>
 
+      {{#if this.matchingFeatures.length}}
+        <div class="section-header">
+          <h2>Highlights</h2>
+        </div>
+        <div class="features-section">
+          {{#each this.matchingFeatures as |feature|}}
+            <FeatureCard @feature={{feature}} />
+          {{/each}}
+        </div>
+      {{/if}}
+
+      <div class="section-header">
+        <h2>Detailed Changes</h2>
+      </div>
+
       <div class="filter-section">
         <div class="filter-pills">
           {{#each this.commitTypes as |type|}}
@@ -234,10 +313,6 @@ export default class CommitViewer extends Component {
       {{/if}}
 
       {{#if this.commits.length}}
-        <div class="results-header">
-          <h2>{{this.formattedCommitCount}} found</h2>
-        </div>
-
         <VerticalCollection
           @items={{this.commits}}
           @estimateHeight={{120}}
