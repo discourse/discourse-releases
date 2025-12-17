@@ -4,7 +4,12 @@ import CommitViewer from '../components/commit-viewer';
 <template>
   {{pageTitle "Discourse Commit Viewer"}}
 
-  <CommitViewer />
+  <CommitViewer
+    @start={{@controller.start}}
+    @end={{@controller.end}}
+    @onUpdateStart={{@controller.updateStart}}
+    @onUpdateEnd={{@controller.updateEnd}}
+  />
 
   {{outlet}}
 </template>

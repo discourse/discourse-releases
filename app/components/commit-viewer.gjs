@@ -24,10 +24,7 @@ const COMMIT_TYPES = [
 ];
 
 export default class CommitViewer extends Component {
-  @service router;
   @tracked data = new ChangelogData();
-  @tracked startHash = '';
-  @tracked endHash = '';
   @tracked hiddenTypes = new Set();
   @tracked startAdvancedMode = false;
   @tracked endAdvancedMode = false;
@@ -40,28 +37,42 @@ export default class CommitViewer extends Component {
   async loadData() {
     try {
       await this.data.load();
-      this.loadQueryParams();
     } catch (error) {
       console.error('Failed to load data:', error);
     }
   }
 
-  loadQueryParams() {
-    const queryParams = this.router.currentRoute.queryParams;
-    this.startHash = queryParams.start || '';
-    this.endHash = queryParams.end || '';
+  get startHash() {
+    return this.args.start || '';
   }
+
+  get endHash() {
+    return this.args.end || '';
+  }
+
+  isStartDefault = () => {
+    return !this.startHash;
+  };
+
+  isStartSelected = (value) => {
+    return this.startHash === value;
+  };
+
+  isEndSelected = (value) => {
+    if (this.endHash) {
+      return this.endHash === value;
+    }
+    return value === 'main';
+  };
 
   @action
   updateStartHash(event) {
-    this.startHash = event.target.value;
-    this.updateQueryParams();
+    this.args.onUpdateStart?.(event.target.value);
   }
 
   @action
   updateEndHash(event) {
-    this.endHash = event.target.value;
-    this.updateQueryParams();
+    this.args.onUpdateEnd?.(event.target.value);
   }
 
   @action
@@ -69,8 +80,7 @@ export default class CommitViewer extends Component {
     this.startAdvancedMode = !this.startAdvancedMode;
     if (!this.startAdvancedMode) {
       // Reset to first option when leaving advanced mode
-      this.startHash = this.data.baseTag;
-      this.updateQueryParams();
+      this.args.onUpdateStart?.(this.data.baseTag);
     }
   }
 
@@ -79,21 +89,18 @@ export default class CommitViewer extends Component {
     this.endAdvancedMode = !this.endAdvancedMode;
     if (!this.endAdvancedMode) {
       // Reset to first option when leaving advanced mode
-      this.endHash = '';
-      this.updateQueryParams();
+      this.args.onUpdateEnd?.('');
     }
   }
 
   @action
   updateStartRef(event) {
-    this.startHash = event.target.value;
-    this.updateQueryParams();
+    this.args.onUpdateStart?.(event.target.value);
   }
 
   @action
   updateEndRef(event) {
-    this.endHash = event.target.value;
-    this.updateQueryParams();
+    this.args.onUpdateEnd?.(event.target.value);
   }
 
   @cached
@@ -208,13 +215,6 @@ export default class CommitViewer extends Component {
     this.hiddenTypes = new Set(this.hiddenTypes); // Trigger reactivity
   }
 
-  updateQueryParams() {
-    const queryParams = {};
-    if (this.startHash) queryParams.start = this.startHash;
-    if (this.endHash) queryParams.end = this.endHash;
-    this.router.transitionTo({ queryParams });
-  }
-
   get formattedCommitCount() {
     return this.commits.length === 1
       ? '1 commit'
@@ -277,15 +277,14 @@ export default class CommitViewer extends Component {
           {{else}}
             <select
               id="start-ref"
-              value={{if this.startHash this.startHash this.data.baseTag}}
               {{on "change" this.updateStartRef}}
             >
-              <option value={{this.data.baseTag}}>
+              <option value={{this.data.baseTag}} selected={{this.isStartDefault}}>
                 {{this.data.baseTag}}
                 (base)
               </option>
               {{#each this.data.sortedRefs as |ref|}}
-                <option value={{ref.value}}>
+                <option value={{ref.value}} selected={{this.isStartSelected ref.value}}>
                   {{ref.label}}
                 </option>
               {{/each}}
@@ -319,11 +318,10 @@ export default class CommitViewer extends Component {
           {{else}}
             <select
               id="end-ref"
-              value={{if this.endHash this.endHash "main"}}
               {{on "change" this.updateEndRef}}
             >
               {{#each this.data.sortedRefs as |ref|}}
-                <option value={{ref.value}}>
+                <option value={{ref.value}} selected={{this.isEndSelected ref.value}}>
                   {{ref.label}}
                 </option>
               {{/each}}
