@@ -114,86 +114,6 @@ body {
   gap: 1rem;
 }
 
-.commit-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-  cursor: pointer;
-  transition: all 0.3s;
-  border-left: 4px solid #3498db;
-}
-
-.commit-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
-}
-
-.commit-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.commit-author {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.author-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid #e1e8ed;
-}
-
-.author-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.author-name {
-  font-weight: 600;
-  color: #2c3e50;
-  font-size: 0.95rem;
-}
-
-.commit-date {
-  color: #7f8c8d;
-  font-size: 0.85rem;
-}
-
-.commit-sha {
-  background: #ecf0f1;
-  color: #2c3e50;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.commit-message {
-  color: #2c3e50;
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-bottom: 1rem;
-  white-space: pre-wrap;
-}
-
-.commit-footer {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.click-hint {
-  color: #7f8c8d;
-  font-size: 0.85rem;
-  font-style: italic;
-}
-
 /* Responsive design */
 @media (width <= 768px) {
   body {
@@ -202,19 +122,5 @@ body {
   
   .form-section {
     padding: 1.5rem;
-  }
-  
-  .commit-card {
-    padding: 1rem;
-  }
-  
-  .commit-header {
-    flex-direction: column;
-    gap: 0.75rem;
-    align-items: flex-start;
-  }
-  
-  .commit-author {
-    width: 100%;
   }
 }

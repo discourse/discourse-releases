@@ -3,8 +3,8 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { fn } from '@ember/helper';
-import { GitHubAPI } from '../../lib/github-api';
+import { GitHubAPI } from '../lib/github-api';
+import CommitCard from './commit-card';
 
 export default class CommitViewer extends Component {
   @service router;
@@ -23,7 +23,7 @@ export default class CommitViewer extends Component {
 
   loadQueryParams() {
     const queryParams = this.router.currentRoute.queryParams;
-    this.startCommit = queryParams.start || 'latest';
+    this.startCommit = queryParams.start || 'beta';
     this.endCommit = queryParams.end || '';
 
     if (this.startCommit) {
@@ -76,11 +76,6 @@ export default class CommitViewer extends Component {
     if (this.endCommit) queryParams.end = this.endCommit;
 
     this.router.transitionTo({ queryParams });
-  }
-
-  @action
-  openCommit(commit) {
-    window.open(commit.url, '_blank');
   }
 
   get formattedCommitCount() {
@@ -149,44 +144,7 @@ export default class CommitViewer extends Component {
 
         <div class="commits-list">
           {{#each this.commits as |commit|}}
-            <div class="commit-card" {{on "click" (fn this.openCommit commit)}}>
-              <div class="commit-header">
-                <div class="commit-author">
-                  {{#if commit.author.avatar}}
-                    <img
-                      src={{commit.author.avatar}}
-                      alt={{commit.author.name}}
-                      class="author-avatar"
-                    />
-                  {{/if}}
-                  <div class="author-info">
-                    <div class="author-name">
-                      {{#if commit.author.username}}
-                        @{{commit.author.username}}
-                      {{else}}
-                        {{commit.author.name}}
-                      {{/if}}
-                    </div>
-                    <div class="commit-date">
-                      {{commit.formattedDate}}
-                      at
-                      {{commit.formattedTime}}
-                    </div>
-                  </div>
-                </div>
-                <div class="commit-sha">
-                  {{commit.shortSha}}
-                </div>
-              </div>
-
-              <div class="commit-message">
-                {{commit.message}}
-              </div>
-
-              <div class="commit-footer">
-                <span class="click-hint">Click to view on GitHub</span>
-              </div>
-            </div>
+            <CommitCard @commit={{commit}} />
           {{/each}}
         </div>
       {{/if}}

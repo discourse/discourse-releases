@@ -43,35 +43,6 @@ export class GitHubAPI {
   }
 
   /**
-   * Get a single commit by hash
-   * @param {string} commitHash - The commit hash
-   * @returns {Promise<Object>} Commit object
-   */
-  async getCommit(commitHash) {
-    try {
-      const url = `${this.baseURL}/repos/${this.owner}/${this.repo}/commits/${commitHash}`;
-
-      const response = await fetch(url, {
-        headers: {
-          Accept: 'application/vnd.github.v3+json',
-          'User-Agent': 'Discourse-Changelog-Viewer',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `GitHub API error: ${response.status} ${response.statusText}`
-        );
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching commit:', error);
-      throw error;
-    }
-  }
-
-  /**
    * Format commit data for display
    * @param {Object} commit - Raw commit object from GitHub API
    * @returns {Object} Formatted commit object
