@@ -3,7 +3,6 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
-import { GitHubAPI } from '../lib/github-api';
 import CommitCard from './commit-card';
 
 export default class CommitViewer extends Component {
@@ -11,70 +10,92 @@ export default class CommitViewer extends Component {
   @tracked commits = [];
   @tracked isLoading = false;
   @tracked error = null;
-  @tracked startCommit = '';
-  @tracked endCommit = '';
-
-  githubAPI = new GitHubAPI();
+  @tracked startHash = '';
+  @tracked endHash = '';
+  @tracked allCommits = [];
 
   constructor() {
     super(...arguments);
-    this.loadQueryParams();
+    this.loadCommitData();
   }
 
-  loadQueryParams() {
-    const queryParams = this.router.currentRoute.queryParams;
-    this.startCommit = queryParams.start || 'beta';
-    this.endCommit = queryParams.end || '';
-
-    if (this.startCommit) {
-      this.fetchCommits();
-    }
-  }
-
-  @action
-  updateStartCommit(event) {
-    this.startCommit = event.target.value;
-    this.updateQueryParams();
-  }
-
-  @action
-  updateEndCommit(event) {
-    this.endCommit = event.target.value;
-    this.updateQueryParams();
-  }
-
-  @action
-  async fetchCommits() {
-    if (!this.startCommit.trim()) {
-      this.error = 'Start commit/tag is required';
-      return;
-    }
-
+  async loadCommitData() {
     this.isLoading = true;
-    this.error = null;
-    this.commits = [];
-
     try {
-      const rawCommits = await this.githubAPI.getCommitsBetween(
-        this.startCommit.trim(),
-        this.endCommit.trim() || 'HEAD'
-      );
-
-      this.commits = rawCommits.map((commit) =>
-        this.githubAPI.formatCommit(commit)
-      );
+      const module = await import('/data/commits.json');
+      this.allCommits = module.default;
+      this.loadQueryParams();
     } catch (error) {
-      this.error = `Failed to fetch commits: ${error.message}`;
+      this.error = `Failed to load commit data: ${error.message}`;
     } finally {
       this.isLoading = false;
     }
   }
 
+  loadQueryParams() {
+    const queryParams = this.router.currentRoute.queryParams;
+    this.startHash = queryParams.start || '';
+    this.endHash = queryParams.end || '';
+    this.updateCommitRange();
+  }
+
+  @action
+  updateStartHash(event) {
+    this.startHash = event.target.value;
+    this.updateQueryParams();
+    this.updateCommitRange();
+  }
+
+  @action
+  updateEndHash(event) {
+    this.endHash = event.target.value;
+    this.updateQueryParams();
+    this.updateCommitRange();
+  }
+
+  updateCommitRange() {
+    if (!this.allCommits.length) return;
+
+    let filtered = this.allCommits;
+
+    // Find start commit
+    if (this.startHash.trim()) {
+      const startCommit = this.allCommits.find((c) =>
+        c.hash.startsWith(this.startHash.trim())
+      );
+      if (startCommit) {
+        filtered = filtered.filter(
+          (c) => c.commitIndex >= startCommit.commitIndex
+        );
+      } else {
+        this.error = `Start commit not found: ${this.startHash}`;
+        this.commits = [];
+        return;
+      }
+    }
+
+    // Find end commit
+    if (this.endHash.trim()) {
+      const endCommit = this.allCommits.find((c) =>
+        c.hash.startsWith(this.endHash.trim())
+      );
+      if (endCommit) {
+        filtered = filtered.filter((c) => c.commitIndex <= endCommit.commitIndex);
+      } else {
+        this.error = `End commit not found: ${this.endHash}`;
+        this.commits = [];
+        return;
+      }
+    }
+
+    this.error = null;
+    this.commits = filtered;
+  }
+
   updateQueryParams() {
     const queryParams = {};
-    if (this.startCommit) queryParams.start = this.startCommit;
-    if (this.endCommit) queryParams.end = this.endCommit;
-
+    if (this.startHash) queryParams.start = this.startHash;
+    if (this.endHash) queryParams.end = this.endHash;
     this.router.transitionTo({ queryParams });
   }
 
@@ -84,57 +105,51 @@ export default class CommitViewer extends Component {
       : `${this.commits.length} commits`;
   }
 
+  get totalCommits() {
+    return this.allCommits.length;
+  }
+
   <template>
     <div class="commit-viewer">
       <div class="header">
-        <h1>Discourse Commit Viewer</h1>
-        <p>View commits between two commit hashes in the Discourse repository</p>
+        <h1>Discourse Changelog</h1>
+        <p>View commits since v3.4.0 (total: {{this.totalCommits}} commits)</p>
       </div>
 
       <div class="form-section">
         <div class="input-group">
-          <label for="start-commit">Start Commit/Tag:</label>
+          <label for="start-hash">Start Commit (optional):</label>
           <input
-            id="start-commit"
+            id="start-hash"
             type="text"
-            value={{this.startCommit}}
-            placeholder="e.g., latest, v3.0.0, abc123de..."
-            {{on "input" this.updateStartCommit}}
+            value={{this.startHash}}
+            placeholder="Leave empty for first commit, or enter commit hash..."
+            {{on "input" this.updateStartHash}}
           />
-          <small class="input-help">Use 'latest' for the most recent Discourse
-            release</small>
+          <small class="input-help">Enter a commit hash (full or partial) or leave empty to start from the beginning</small>
         </div>
 
         <div class="input-group">
-          <label for="end-commit">End Commit/Tag (optional):</label>
+          <label for="end-hash">End Commit (optional):</label>
           <input
-            id="end-commit"
+            id="end-hash"
             type="text"
-            value={{this.endCommit}}
-            placeholder="e.g., HEAD, main, def456gh... (defaults to HEAD)"
-            {{on "input" this.updateEndCommit}}
+            value={{this.endHash}}
+            placeholder="Leave empty for latest commit, or enter commit hash..."
+            {{on "input" this.updateEndHash}}
           />
-          <small class="input-help">Defaults to HEAD (latest main branch commit)</small>
+          <small class="input-help">Enter a commit hash (full or partial) or leave empty to show up to the latest</small>
         </div>
-
-        <button
-          type="button"
-          class="fetch-button"
-          disabled={{this.isLoading}}
-          {{on "click" this.fetchCommits}}
-        >
-          {{#if this.isLoading}}
-            Loading...
-          {{else}}
-            Fetch Commits
-          {{/if}}
-        </button>
       </div>
 
       {{#if this.error}}
         <div class="error">
           {{this.error}}
         </div>
+      {{/if}}
+
+      {{#if this.isLoading}}
+        <div class="loading">Loading commit data...</div>
       {{/if}}
 
       {{#if this.commits.length}}
