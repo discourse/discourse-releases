@@ -119,7 +119,7 @@ export default class CommitViewer extends Component {
   }
 
   @cached
-  get commits() {
+  get allCommits() {
     if (!this.data.commitData) return [];
 
     const endRef = this.endHash.trim() || DEFAULT_END_REF;
@@ -131,7 +131,12 @@ export default class CommitViewer extends Component {
     }
 
     // Get commits between the two refs using graph traversal
-    let filtered = this.data.getCommitsBetween(startRef, endRef);
+    return this.data.getCommitsBetween(startRef, endRef);
+  }
+
+  @cached
+  get commits() {
+    let filtered = this.allCommits;
 
     // Filter by commit type
     if (this.hiddenTypes.size > 0) {
@@ -163,19 +168,19 @@ export default class CommitViewer extends Component {
 
   @cached
   get matchingFeatures() {
-    if (!this.commits.length || !this.data.newFeatures.length) {
+    if (!this.allCommits.length || !this.data.newFeatures.length) {
       return [];
     }
 
     // Create a Set of commit hashes for quick lookup
-    const commitHashes = new Set(this.commits.map((c) => c.hash));
+    const commitHashes = new Set(this.allCommits.map((c) => c.hash));
 
     const newestVersion = parseVersion(
-      this.commits[0].version?.replace(/\s*\+\d+$/, '')
+      this.allCommits[0].version?.replace(/\s*\+\d+$/, '')
     );
 
     const oldestVersion = parseVersion(
-      this.commits.at(-1).version?.replace(/\s*\+\d+$/, '')
+      this.allCommits.at(-1).version?.replace(/\s*\+\d+$/, '')
     );
 
     console.log(oldestVersion, newestVersion);
@@ -243,7 +248,7 @@ export default class CommitViewer extends Component {
       counts[type.key] = 0;
     });
 
-    this.commits.forEach((commit) => {
+    this.allCommits.forEach((commit) => {
       const type = getCommitType(commit.subject);
       if (type && counts[type] !== undefined) {
         counts[type]++;
