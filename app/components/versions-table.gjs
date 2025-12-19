@@ -222,11 +222,11 @@ export default class VersionsTable extends Component {
               <div class="card-header">
                 <div class="version-title">
                   {{#if (eq group.supportInfo.status "in-development")}}
-                    <a href="/changelog?end=latest" class="version-link">v{{group.minorVersion}}</a>
+                    <a href="/changelog/latest" class="version-link">v{{group.minorVersion}}</a>
                   {{else if (eq group.supportInfo.status "upcoming")}}
                     <span class="version-name">v{{group.minorVersion}}</span>
                   {{else}}
-                    <a href="/changelog?end={{group.headerVersion.version}}" class="version-link">v{{group.minorVersion}}</a>
+                    <a href="/changelog/{{group.headerVersion.version}}" class="version-link">v{{group.minorVersion}}</a>
                   {{/if}}
                   {{#if group.supportInfo.isESR}}
                     <span class="esr-indicator">ESR</span>
@@ -291,7 +291,7 @@ export default class VersionsTable extends Component {
                   <div class="patch-versions">
                     {{#each group.versions as |v|}}
                       <div class="patch-version-row">
-                        <a href="/changelog?end={{v.version}}" class="patch-version-link">{{v.version}}</a>
+                        <a href="/changelog/{{v.version}}" class="patch-version-link">{{v.version}}</a>
                         <span class="relative-date">
                           {{this.getRelativeTime v.date}}
                           <span class="date-badge">{{this.formatDate v.date}}</span>
