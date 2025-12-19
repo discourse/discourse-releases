@@ -3,6 +3,10 @@
 /declarations/
 /tmp/
 
+# generated data files
+/data/commits.json
+/data/new-features.json
+
 # dependencies
 /node_modules/
 

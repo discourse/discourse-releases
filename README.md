@@ -1,7 +1,6 @@
-# discourse-changelog
+# Discourse Changelog
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+A web application for browsing Discourse release history, changelogs, and version information. Built with Ember.js and deployed to GitHub Pages.
 
 ## Prerequisites
 
@@ -20,13 +19,21 @@ You will need the following things properly installed on your computer.
 
 ## Running / Development
 
-- `pnpm start`
-- Visit your app at [http://localhost:4200](http://localhost:4200).
-- Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+- `pnpm start` - Start the development server
+- Visit your app at [http://localhost:5173](http://localhost:5173)
 
-### Code Generators
+### Generating Data Files
 
-Make use of the many generators for code, try `pnpm ember help generate` for more details
+The application requires data files to be generated from the Discourse repository:
+
+- `pnpm build:data` - Generate commits.json and new-features.json
+
+This will:
+1. Clone the Discourse repository to `tmp/discourse-repo`
+2. Extract commit information and generate `data/commits.json`
+3. Fetch new features from meta.discourse.org to `data/new-features.json`
+
+**Note**: This process can take several minutes and requires git to be installed.
 
 ### Running Tests
 
@@ -39,12 +46,12 @@ Make use of the many generators for code, try `pnpm ember help generate` for mor
 
 ### Building
 
-- `pnpm vite build --mode development` (development)
-- `pnpm build` (production)
+- `pnpm build` - Build for production (outputs to `dist/`)
+- `pnpm build:full` - Generate data files and build for production
 
 ### Deploying
 
-Specify what it takes to deploy your app.
+This application automatically deploys to GitHub Pages (at discourse-changelog.dtaylor.uk) when changes are pushed to the `main` branch. The deployment workflow generates the data files and builds the site.
 
 ## Further Reading / Useful Links
 

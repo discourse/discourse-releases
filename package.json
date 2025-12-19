@@ -11,7 +11,9 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && node scripts/post-build.mjs",
+    "build:data": "node lib/write-commit-info.mjs && node lib/fetch-new-features.mjs",
+    "build:full": "pnpm build:data && pnpm build",
     "format": "prettier . --cache --write",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\" --prefixColors auto",
     "lint:css": "stylelint \"**/*.css\"",
