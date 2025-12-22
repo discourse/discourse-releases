@@ -80,9 +80,9 @@ export default class VersionsTimeline extends Component {
         widthPercent = 100 - startPercent;
       }
 
-      // Use blue for active development, green for supported
-      const devColor = '#3498db';
-      const supportedColor = '#27ae60';
+      // Use CSS variables for colors
+      const devColor = 'var(--color-active-development)';
+      const supportedColor = 'var(--color-supported)';
 
       // Use development start date from data
       const devStartDate = group.supportInfo?.developmentStartDate || startDate;

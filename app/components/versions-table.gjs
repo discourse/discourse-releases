@@ -469,22 +469,18 @@ export default class VersionsTable extends Component {
       }
 
       .version-card.active-version .card-header {
-        background: #d4edda;
+        background: oklch(from var(--color-supported) l c h / 0.2);
       }
 
       .version-card.in-development-version .card-header {
-        background: #c3e6cb;
-      }
-
-      .version-card.upcoming-version .card-header {
-        background: #d1ecf1;
+        background: oklch(from var(--color-active-development) l c h / 0.2);
       }
 
       .esr-indicator {
         margin-left: 0.5rem;
         display: inline-block;
         padding: 0.15rem 0.4rem;
-        background: #9b59b6;
+        background: var(--color-esr);
         color: white;
         font-size: 0.7rem;
         font-weight: 600;
@@ -493,32 +489,22 @@ export default class VersionsTable extends Component {
       }
 
       .version-card.eol-version .esr-indicator {
-        background: #95a5a6;
+        background: var(--color-end-of-life);
       }
 
       .support-status-active {
-        background: #27ae60;
+        background: var(--color-supported);
         color: white;
       }
 
       .support-status-end-of-life {
-        background: #95a5a6;
-        color: white;
-      }
-
-      .support-status-upcoming {
-        background: #3498db;
+        background: var(--color-end-of-life);
         color: white;
       }
 
       .support-status-in-development {
-        background: #27ae60;
+        background: var(--color-active-development);
         color: white;
-      }
-
-      .upcoming-date {
-        color: #3498db;
-        font-style: italic;
       }
 
       .relative-date {

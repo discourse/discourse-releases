@@ -172,7 +172,7 @@
 .esr-badge {
   display: inline-block;
   padding: 0.1rem 0.3rem;
-  background: #9b59b6;
+  background: var(--color-esr);
   color: white;
   font-size: 0.65rem;
   font-weight: 600;
@@ -180,7 +180,7 @@
 }
 
 .esr-badge-muted {
-  background: #95a5a6;
+  background: var(--color-end-of-life);
 }
 
 .timeline-status-dot {
@@ -191,19 +191,15 @@
 }
 
 .timeline-status-in-development {
-  background: #3498db;
+  background: var(--color-active-development);
 }
 
 .timeline-status-active {
-  background: #27ae60;
+  background: var(--color-supported);
 }
 
 .timeline-status-end-of-life {
-  background: #95a5a6;
-}
-
-.timeline-status-upcoming {
-  background: #3498db;
+  background: var(--color-end-of-life);
 }
 
 .timeline-legend {
@@ -229,11 +225,11 @@
 }
 
 .timeline-legend-color-development {
-  background: #3498db;
+  background: var(--color-active-development);
 }
 
 .timeline-legend-color-supported {
-  background: #27ae60;
+  background: var(--color-supported);
 }
 
 .timeline-legend-label {
