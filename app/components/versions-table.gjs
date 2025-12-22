@@ -5,6 +5,7 @@ import { on } from '@ember/modifier';
 import { fn, get } from '@ember/helper';
 import { ChangelogData } from '../lib/git-utils.js';
 import semver from 'semver';
+import VersionsTimeline from './versions-timeline.gjs';
 
 const eq = (a, b) => a === b;
 
@@ -217,9 +218,11 @@ export default class VersionsTable extends Component {
       {{#if this.data.isLoading}}
         <div class="loading">Loading versions...</div>
       {{else}}
+        <VersionsTimeline @versions={{this.groupedVersions}} />
+
         <div class="versions-cards">
           {{#each this.groupedVersions as |group|}}
-            <div class="version-card {{if (eq group.supportInfo.status 'upcoming') 'upcoming-version'}} {{if (eq group.supportInfo.status 'in-development') 'in-development-version'}} {{if (eq group.supportInfo.status 'active') 'active-version'}} {{if (eq group.supportInfo.status 'end-of-life') 'eol-version'}} {{if group.supportInfo.isESR 'esr-version'}}">
+            <div id="version-{{group.minorVersion}}" class="version-card {{if (eq group.supportInfo.status 'upcoming') 'upcoming-version'}} {{if (eq group.supportInfo.status 'in-development') 'in-development-version'}} {{if (eq group.supportInfo.status 'active') 'active-version'}} {{if (eq group.supportInfo.status 'end-of-life') 'eol-version'}} {{if group.supportInfo.isESR 'esr-version'}}">
               <div class="card-header">
                 <div class="version-title">
                   {{#if (eq group.supportInfo.status "in-development")}}
@@ -347,11 +350,17 @@ export default class VersionsTable extends Component {
         border-radius: 6px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        transition: box-shadow 0.2s;
+        transition: box-shadow 0.2s, transform 0.2s;
+        scroll-margin-top: 20px;
       }
 
       .version-card:hover {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      }
+
+      .version-card:target {
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        transform: scale(1.01);
       }
 
       .card-header {

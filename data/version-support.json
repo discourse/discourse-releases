@@ -1,21 +1,17 @@
 [
-  {
-    "version": "2026.01",
-    "releaseDate": "2026-01",
-    "supportEndDate": "2026-09",
-    "isESR": true,
-    "status": "upcoming"
-  },
+  
   {
     "version": "2025.12",
     "releaseDate": "2025-12",
-    "supportEndDate": "2026-03",
+    "developmentStartDate": "2025-11-25",
+    "supportEndDate": "2026-02",
     "isESR": false,
     "status": "in-development"
   },
   {
     "version": "2025.11",
     "releaseDate": "2025-11-25",
+    "developmentStartDate": "2025-10-28",
     "supportEndDate": "2026-01",
     "isESR": false,
     "status": "active"
@@ -23,6 +19,7 @@
   {
     "version": "3.5",
     "releaseDate": "2025-08-19",
+    "developmentStartDate": "2025-08-19",
     "supportEndDate": "2026-03",
     "isESR": true,
     "status": "active"
@@ -30,6 +27,7 @@
   {
     "version": "3.4",
     "releaseDate": "2025-02-04",
+    "developmentStartDate": "2025-01-04",
     "supportEndDate": "2025-08-19",
     "isESR": true,
     "status": "end-of-life"
