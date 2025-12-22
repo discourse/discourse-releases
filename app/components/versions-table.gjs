@@ -218,6 +218,16 @@ export default class VersionsTable extends Component {
       {{#if this.data.isLoading}}
         <div class="loading">Loading versions...</div>
       {{else}}
+        <div class="version-info">
+          <p>
+            Discourse releases new versions every month, which are supported with critical bug fixes and security updates for approximately two months.
+            Every 6 months, one of those releases is designated as an Extended Support Release (ESR) version. This will be supported for approximately 8 months, providing an option for users who prefer less frequent updates.
+          </p>
+          <p>
+            Below is a timeline and list of Discourse versions, their release dates, end-of-life dates, and support status. Click on a version to view its changelog.
+          </p>
+        </div>
+
         <VersionsTimeline @versions={{this.groupedVersions}} />
 
         <div class="versions-cards">
@@ -329,14 +339,32 @@ export default class VersionsTable extends Component {
       }
 
       .header p {
-        color: #666;
+        color: var(--text-secondary);
         font-size: 1.1rem;
+      }
+
+      .version-info {
+        background: var(--bg-card);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .version-info p {
+        margin: 0 0 1rem 0;
+        line-height: 1.7;
+        color: var(--text-primary);
+      }
+
+      .version-info p:last-child {
+        margin-bottom: 0;
       }
 
       .loading {
         text-align: center;
         padding: 2rem;
-        color: #666;
+        color: var(--text-secondary);
       }
 
       .versions-cards {
@@ -346,20 +374,20 @@ export default class VersionsTable extends Component {
       }
 
       .version-card {
-        background: white;
+        background: var(--bg-card);
         border-radius: 6px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-sm);
         overflow: hidden;
         transition: box-shadow 0.2s, transform 0.2s;
         scroll-margin-top: 20px;
       }
 
       .version-card:hover {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-hover);
       }
 
       .version-card:target {
-        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        box-shadow: oklch(from var(--color-active-development) l c h / 0.3) 0 4px 12px;
         transform: scale(1.01);
       }
 
@@ -368,7 +396,7 @@ export default class VersionsTable extends Component {
         justify-content: space-between;
         align-items: center;
         padding: 0.75rem 1rem;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--border-subtle);
       }
 
       .version-title {
@@ -380,7 +408,7 @@ export default class VersionsTable extends Component {
       }
 
       .version-link {
-        color: #0066cc;
+        color: var(--text-link);
         text-decoration: none;
       }
 
@@ -389,7 +417,7 @@ export default class VersionsTable extends Component {
       }
 
       .version-name {
-        color: #333;
+        color: var(--text-primary);
       }
 
       .status-badge {
@@ -414,7 +442,7 @@ export default class VersionsTable extends Component {
       }
 
       .card-label {
-        color: #666;
+        color: var(--text-secondary);
         font-size: 0.85rem;
         font-weight: 500;
       }
@@ -425,7 +453,7 @@ export default class VersionsTable extends Component {
       }
 
       .card-value a {
-        color: #0066cc;
+        color: var(--text-link);
         text-decoration: none;
       }
 
@@ -434,13 +462,13 @@ export default class VersionsTable extends Component {
       }
 
       .muted-text {
-        color: #999;
+        color: var(--text-muted);
       }
 
       .patch-versions {
-        border-top: 1px solid #f0f0f0;
+        border-top: 1px solid var(--border-subtle);
         padding: 0.5rem 1rem;
-        background: #fafafa;
+        background: var(--bg-subtle);
       }
 
       .patch-version-row {
@@ -451,7 +479,7 @@ export default class VersionsTable extends Component {
       }
 
       .patch-version-link {
-        color: #0066cc;
+        color: var(--text-link);
         text-decoration: none;
         font-size: 0.9rem;
       }
@@ -461,7 +489,7 @@ export default class VersionsTable extends Component {
       }
 
       .version-card.eol-version .card-header {
-        background: #e8e8e8;
+        background: oklch(from var(--color-end-of-life) l c h / 0.15);
       }
 
       .version-card.eol-version {
@@ -517,8 +545,8 @@ export default class VersionsTable extends Component {
       .date-badge {
         display: inline-block;
         padding: 0.1rem 0.4rem;
-        background: #f0f0f0;
-        color: #666;
+        background: var(--bg-subtle);
+        color: var(--text-secondary);
         font-size: 0.75rem;
         border-radius: 3px;
         font-weight: normal;

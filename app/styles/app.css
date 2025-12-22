@@ -1,19 +1,66 @@
 /* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
 
 :root {
+  color-scheme: light dark;
+
+  /* Status colors */
   --color-active-development: #3498db;
   --color-supported: #27ae60;
   --color-esr: #9b59b6;
   --color-end-of-life: #95a5a6;
+  --color-today: #e74c3c;
+
+  /* Light mode colors */
+  --bg-page: #f5f5f5;
+  --bg-card: white;
+  --bg-card-hover: white;
+  --bg-subtle: #f8f9fa;
+  --bg-code: #f8f9fa;
+
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-muted: #7f8c8d;
+  --text-link: #0066cc;
+  --text-link-hover: #0052a3;
+
+  --border-color: #e1e8ed;
+  --border-subtle: #f0f0f0;
+
+  --shadow-sm: 0 2px 4px rgb(0 0 0 / 10%);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 15%);
+  --shadow-hover: 0 2px 6px rgb(0 0 0 / 12%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #1a1a1a;
+    --bg-card: #2d2d2d;
+    --bg-card-hover: #363636;
+    --bg-subtle: #242424;
+    --bg-code: #242424;
+
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #888;
+    --text-link: #5dade2;
+    --text-link-hover: #85c1e9;
+
+    --border-color: #404040;
+    --border-subtle: #333;
+
+    --shadow-sm: 0 2px 4px rgb(0 0 0 / 30%);
+    --shadow-md: 0 4px 12px rgb(0 0 0 / 40%);
+    --shadow-hover: 0 2px 6px rgb(0 0 0 / 35%);
+  }
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   line-height: 1.6;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
   padding: 20px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-page);
 }
 
 .commit-viewer {
@@ -26,7 +73,7 @@ body {
   display: inline-block;
   margin-bottom: 1.5rem;
   padding: 0.5rem 1rem;
-  color: #3498db;
+  color: var(--color-active-development);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
@@ -35,8 +82,8 @@ body {
 }
 
 .back-to-versions:hover {
-  background: #f0f8ff;
-  color: #2980b9;
+  background: oklch(from var(--color-active-development) l c h / 0.1);
+  color: oklch(from var(--color-active-development) calc(l * 0.85) c h);
 }
 
 .header {
@@ -45,12 +92,12 @@ body {
 }
 
 .header h1 {
-  color: #2c3e50;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .header p {
-  color: #7f8c8d;
+  color: var(--text-muted);
   font-size: 1.1rem;
 }
 
@@ -63,21 +110,21 @@ body {
 }
 
 .changelog-range {
-  color: #555;
+  color: var(--text-secondary);
   font-size: 1.1rem;
   margin: 0;
 }
 
 .changelog-range strong {
-  color: #2c3e50;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .toggle-selector-btn {
   padding: 0.4rem 1rem;
-  border: 1px solid #d0d0d0;
-  background: #f8f8f8;
-  color: #666;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
   border-radius: 4px;
   font-size: 0.85rem;
   font-weight: 500;
@@ -86,16 +133,16 @@ body {
 }
 
 .toggle-selector-btn:hover {
-  background: #e8e8e8;
-  border-color: #b0b0b0;
-  color: #555;
+  background: oklch(from var(--bg-subtle) calc(l * 0.95) c h);
+  border-color: oklch(from var(--border-color) calc(l * 0.85) c h);
+  color: var(--text-primary);
 }
 
 .form-section {
-  background: white;
+  background: var(--bg-card);
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  box-shadow: var(--shadow-sm);
   margin-bottom: 2rem;
 }
 
@@ -113,14 +160,14 @@ body {
 .input-group label {
   display: block;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .advanced-toggle {
   padding: 0.25rem 0.75rem;
-  border: 1px solid #3498db;
-  background: white;
-  color: #3498db;
+  border: 1px solid var(--color-active-development);
+  background: var(--bg-card);
+  color: var(--color-active-development);
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -129,7 +176,7 @@ body {
 }
 
 .advanced-toggle:hover {
-  background: #3498db;
+  background: var(--color-active-development);
   color: white;
 }
 
@@ -137,17 +184,18 @@ body {
 .input-group select {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e1e8ed;
+  border: 2px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s;
-  background: white;
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .input-group input:focus,
 .input-group select:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: var(--color-active-development);
 }
 
 .input-group select {
@@ -157,13 +205,13 @@ body {
 .input-help {
   display: block;
   margin-top: 0.25rem;
-  color: #7f8c8d;
+  color: var(--text-muted);
   font-size: 0.875rem;
   font-style: italic;
 }
 
 .fetch-button {
-  background: #3498db;
+  background: var(--color-active-development);
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -175,16 +223,16 @@ body {
 }
 
 .fetch-button:disabled {
-  background: #bdc3c7;
+  background: var(--color-end-of-life);
   cursor: not-allowed;
 }
 
 .fetch-button:hover:not(:disabled) {
-  background: #2980b9;
+  background: oklch(from var(--color-active-development) calc(l * 0.85) c h);
 }
 
 .error {
-  background: #e74c3c;
+  background: var(--color-today);
   color: white;
   padding: 1rem;
   border-radius: 4px;
@@ -196,7 +244,7 @@ body {
 }
 
 .results-header h2 {
-  color: #2c3e50;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -221,11 +269,11 @@ body {
 .section-header::after {
   content: '';
   flex: 1;
-  border-bottom: 2px solid #e1e8ed;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .section-header h2 {
-  color: #2c3e50;
+  color: var(--text-primary);
   font-size: 1.5rem;
   margin: 0;
   font-weight: 700;
@@ -238,10 +286,10 @@ body {
 }
 
 .filter-section {
-  background: white;
+  background: var(--bg-card);
   padding: 1.5rem 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  box-shadow: var(--shadow-sm);
   margin-bottom: 2rem;
 }
 
@@ -249,7 +297,7 @@ body {
   display: block;
   margin-bottom: 0.75rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .filter-input-wrapper {
@@ -259,21 +307,22 @@ body {
 .filter-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 2px solid #e1e8ed;
+  border: 2px solid var(--border-color);
   border-radius: 6px;
   font-size: 0.95rem;
   transition: border-color 0.3s;
-  background: white;
+  background: var(--bg-card);
+  color: var(--text-primary);
   box-sizing: border-box;
 }
 
 .filter-input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: var(--color-active-development);
 }
 
 .filter-input::placeholder {
-  color: #95a5a6;
+  color: var(--text-muted);
 }
 
 .commit-tabs {
@@ -284,9 +333,9 @@ body {
 
 .commit-tab {
   padding: 0.6rem 1rem;
-  border: 2px solid #e1e8ed;
-  background: white;
-  color: #5a6c7d;
+  border: 2px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -300,14 +349,14 @@ body {
 }
 
 .commit-tab:hover {
-  border-color: #b0b0b0;
-  background: #f8f9fa;
+  border-color: oklch(from var(--border-color) calc(l * 0.85) c h);
+  background: var(--bg-subtle);
 }
 
 .commit-tab.active {
-  background: var(--tab-color, #3498db);
+  background: var(--tab-color, var(--color-active-development));
   color: white;
-  border-color: var(--tab-color, #3498db);
+  border-color: var(--tab-color, var(--color-active-development));
 }
 
 .commit-tab.active:hover {
@@ -332,8 +381,8 @@ body {
 }
 
 ::highlight(search-match) {
-  background-color: #fff59d;
-  color: #000;
+  background-color: light-dark(#fff59d, #6b5b00);
+  color: light-dark(#000, #fff);
 }
 
 /* Responsive design */
