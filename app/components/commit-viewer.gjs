@@ -400,22 +400,22 @@ export default class CommitViewer extends Component {
       {{/if}}
 
       {{#if this.matchingFeatures.length}}
-        <details class="collapsible-section" open>
-          <summary class="section-header">
+        <div class="section">
+          <div class="section-header">
             <h2>Highlights</h2>
-          </summary>
+          </div>
           <div class="features-section">
             {{#each this.matchingFeatures as |feature|}}
               <FeatureCard @feature={{feature}} />
             {{/each}}
           </div>
-        </details>
+        </div>
       {{/if}}
 
-      <details class="collapsible-section" open>
-        <summary class="section-header">
+      <div class="section">
+        <div class="section-header">
           <h2>Detailed Changes</h2>
-        </summary>
+        </div>
 
         <div class="filter-section">
           <div class="commit-tabs">
@@ -465,7 +465,7 @@ export default class CommitViewer extends Component {
             <CommitCard @commit={{commit}} />
           </VerticalCollection>
         {{/if}}
-      </details>
+      </div>
     </div>
   </template>
 }

@@ -53,7 +53,7 @@ export default class FeatureCard extends Component {
         <div class="feature-meta">
           {{#if this.formattedDate}}
             <span class="feature-date">
-              Released {{this.formattedDate}}
+              {{this.formattedDate}}
               {{#if this.versionInfo}}
                 <span class="feature-version">({{this.versionInfo}})</span>
               {{/if}}
