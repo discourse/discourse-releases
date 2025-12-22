@@ -215,15 +215,32 @@ export function parseVersion(version) {
   return semver.parse(normalized);
 }
 
+export const COMMIT_TYPES = [
+  { key: 'FEATURE', label: 'Feature', color: '#27ae60', prefix: 'FEATURE' },
+  { key: 'FIX', label: 'Fix', color: '#c0392b', prefix: 'FIX' },
+  { key: 'PERF', label: 'Performance', color: '#8e44ad', prefix: 'PERF' },
+  { key: 'UX', label: 'UX', color: '#2980b9', prefix: 'UX' },
+  { key: 'A11Y', label: 'Accessibility', color: '#16a085', prefix: 'A11Y' },
+  { key: 'SECURITY', label: 'Security', color: '#d35400', prefix: 'SECURITY' },
+  { key: 'TRANSLATIONS', label: 'Translations', color: '#e91e63', prefix: 'I18N' },
+  { key: 'DEV', label: 'Dev', color: '#7f8c8d', prefix: 'DEV' },
+  { key: 'DEPS', label: 'Dependencies', color: '#7f8c8d', prefix: 'DEPS' },
+  { key: 'OTHER', label: 'Other', color: '#95a5a6' },
+];
+
 // Extract commit type from subject
 export function getCommitType(subject) {
   // Check for explicit type prefix
-  const match = subject.match(/^(FEATURE|FIX|PERF|UX|A11Y|SECURITY|DEV):/);
-  if (match) return match[1];
 
-  // Check for special patterns
+  for (const type of COMMIT_TYPES) {
+    if (type.prefix && subject.startsWith(`${type.prefix}:`)) {
+      return type.key;
+    }
+  }
+
+  // Handle legacy formats
   if (subject.startsWith('Update translations')) return 'TRANSLATIONS';
-  if (subject.startsWith('Build(deps')) return 'DEV';
+  if (subject.startsWith('Build(deps')) return 'DEPS';
 
-  return null;
+  return 'OTHER';
 }

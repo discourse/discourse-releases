@@ -14,21 +14,12 @@ import {
   ChangelogData,
   getCommitType,
   parseVersion,
+  COMMIT_TYPES
 } from '../lib/git-utils.js';
 
 const eq = helper(([a, b]) => a === b);
 
-const COMMIT_TYPES = [
-  { key: 'FEATURE', label: 'Feature', color: '#27ae60' },
-  { key: 'FIX', label: 'Fix', color: '#c0392b' },
-  { key: 'PERF', label: 'Performance', color: '#8e44ad' },
-  { key: 'UX', label: 'UX', color: '#2980b9' },
-  { key: 'A11Y', label: 'Accessibility', color: '#16a085' },
-  { key: 'SECURITY', label: 'Security', color: '#d35400' },
-  { key: 'TRANSLATIONS', label: 'Translations', color: '#e91e63' },
-  { key: 'DEV', label: 'Dev', color: '#7f8c8d' },
-  { key: 'OTHER', label: 'Other', color: '#95a5a6' },
-];
+
 
 const DEFAULT_START_REF = 'v2025.11.0';
 const DEFAULT_END_REF = 'latest';
@@ -36,6 +27,7 @@ const DEFAULT_END_REF = 'latest';
 export default class CommitViewer extends Component {
   @tracked data = new ChangelogData();
   @tracked activeTab = 'all';
+  @tracked filterText = '';
   @tracked startAdvancedMode = false;
   @tracked endAdvancedMode = false;
   @tracked showSelectorUI = false;
@@ -148,6 +140,14 @@ export default class CommitViewer extends Component {
       });
     }
 
+    // Filter by search text
+    if (this.filterText.trim()) {
+      const searchTerm = this.filterText.toLowerCase();
+      filtered = filtered.filter((commit) => {
+        return commit.subject.toLowerCase().includes(searchTerm);
+      });
+    }
+
     // Sort chronologically, newest first
     return this.sortChronological(filtered, 'desc');
   }
@@ -163,7 +163,7 @@ export default class CommitViewer extends Component {
       if (!startRef) {
         startRef = this.data.getPreviousVersion(endRef) || DEFAULT_START_REF;
       }
-      return `No commits found between "${startRef}" and "${endRef}"`;
+      return `No commits found`;
     }
 
     return null;
@@ -214,6 +214,11 @@ export default class CommitViewer extends Component {
   @action
   setActiveTab(tab) {
     this.activeTab = tab;
+  }
+
+  @action
+  updateFilterText(event) {
+    this.filterText = event.target.value;
   }
 
   get formattedCommitCount() {
@@ -439,6 +444,16 @@ export default class CommitViewer extends Component {
               </button>
             {{/each}}
           </div>
+
+          <div class="filter-input-wrapper">
+            <input
+              type="text"
+              class="filter-input"
+              placeholder="Filter commits..."
+              value={{this.filterText}}
+              {{on "input" this.updateFilterText}}
+            />
+          </div>
         </div>
 
         {{#if this.error}}
@@ -462,7 +477,7 @@ export default class CommitViewer extends Component {
             @bufferSize={{5}}
             as |commit|
           >
-            <CommitCard @commit={{commit}} />
+            <CommitCard @commit={{commit}} @searchTerm={{this.filterText}} />
           </VerticalCollection>
         {{/if}}
       </div>

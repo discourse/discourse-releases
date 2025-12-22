@@ -245,6 +245,29 @@ body {
   color: #2c3e50;
 }
 
+.filter-input-wrapper {
+  margin-top: 1rem;
+}
+
+.filter-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.3s;
+  background: white;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.filter-input::placeholder {
+  color: #95a5a6;
+}
+
 .commit-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -298,6 +321,11 @@ body {
   color: white;
   margin-right: 0.5rem;
   vertical-align: middle;
+}
+
+::highlight(search-match) {
+  background-color: #fff59d;
+  color: #000;
 }
 
 /* Responsive design */

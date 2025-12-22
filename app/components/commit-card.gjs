@@ -4,8 +4,9 @@ import { on } from '@ember/modifier';
 import { htmlSafe } from '@ember/template';
 import './commit-card.css';
 import { concat } from '@ember/helper';
-import { getCommitType } from '../lib/git-utils.js';
+import { getCommitType, COMMIT_TYPES } from '../lib/git-utils.js';
 import { trackedWeakMap } from "@ember/reactive/collections";
+import highlightTerm from '../modifiers/highlight-term.js';
 
 const expandedCommits = trackedWeakMap(new WeakMap());
 
@@ -15,16 +16,6 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-const COMMIT_TYPE_CONFIG = {
-  FEATURE: { label: 'Feature', color: '#27ae60' },
-  FIX: { label: 'Fix', color: '#c0392b' },
-  PERF: { label: 'Performance', color: '#8e44ad' },
-  UX: { label: 'UX', color: '#2980b9' },
-  A11Y: { label: 'Accessibility', color: '#16a085' },
-  SECURITY: { label: 'Security', color: '#d35400' },
-  TRANSLATIONS: { label: 'Translations', color: '#e91e63' },
-  DEV: { label: 'Dev', color: '#7f8c8d' },
-};
 
 export default class CommitCard extends Component {
   get commitUrl() {
@@ -54,14 +45,16 @@ export default class CommitCard extends Component {
   }
 
   get commitTypeConfig() {
-    return this.commitType ? COMMIT_TYPE_CONFIG[this.commitType] : null;
+    return this.commitType ? COMMIT_TYPES.find(type => type.key === this.commitType) : null;
   }
 
   get subjectWithLinks() {
     let subject = this.args.commit.subject;
 
     // Strip known type prefixes
-    subject = subject.replace(/^(FEATURE|FIX|PERF|UX|A11Y|SECURITY|DEV):\s*/, '');
+    if(this.commitTypeConfig?.prefix){
+      subject = subject.replace(new RegExp(`^${this.commitTypeConfig.prefix}:\\s*`), '');
+    }
 
     // Strip PR references
     subject = subject.replace(/\s*\(#\d+\)\s*$/, '');
@@ -136,7 +129,7 @@ export default class CommitCard extends Component {
       {{on "click" this.toggleDetails}}
     >
       <div class="commit-header">
-        <div class="commit-message">
+        <div class="commit-message commit-subject" {{highlightTerm searchString=@searchTerm id="search-match"}}>
           {{this.subjectWithLinks}}
         </div>
         <div class="commit-tags">
