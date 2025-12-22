@@ -59,10 +59,10 @@ export default class CommitCard extends Component {
     // Strip PR references
     subject = subject.replace(/\s*\(#\d+\)\s*$/, '');
 
-    // Escape the entire text first
-    const escaped = escapeHtml(subject);
+    // Capitalize first letter
+    subject = subject.replace(/^./, str => str.toUpperCase());
 
-    return htmlSafe(escaped);
+    return subject;
   }
 
   get hasBody() {

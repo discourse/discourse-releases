@@ -32,10 +32,6 @@
   font-weight: 500;
 }
 
-.commit-message::first-letter {
-  text-transform: uppercase;
-}
-
 .commit-message .pr-link {
   color: var(--text-link);
   text-decoration: none;
