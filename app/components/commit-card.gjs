@@ -57,10 +57,8 @@ export default class CommitCard extends Component {
   get subjectWithLinks() {
     let subject = this.args.commit.subject;
 
-    // Strip known type prefixes if enabled
-    if (this.args.stripPrefix) {
-      subject = subject.replace(/^(FEATURE|FIX|PERF|UX|A11Y|SECURITY|DEV):\s*/, '');
-    }
+    // Strip known type prefixes
+    subject = subject.replace(/^(FEATURE|FIX|PERF|UX|A11Y|SECURITY|DEV):\s*/, '');
 
     // Escape the entire text first
     const escaped = escapeHtml(subject);
