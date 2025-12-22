@@ -130,8 +130,7 @@ export default class VersionsTimeline extends Component {
                   class="timeline-month-marker"
                   style="left: {{month.percent}}%"
                 >
-                  <div class="timeline-month-label">{{month.month}}</div>
-                  <div class="timeline-year-label">{{month.year}}</div>
+                  {{month.month}}<br>{{month.year}}
                 </div>
               {{/each}}
             </div>
@@ -191,9 +190,12 @@ export default class VersionsTimeline extends Component {
             <div class="timeline-today-spacer"></div>
             <div class="timeline-today-timeline">
               <div
-                class="timeline-today-line"
+                class="timeline-today-indicator"
                 style="left: {{this.chartData.todayPercent}}%"
-              ></div>
+              >
+                <span class="timeline-today-label">Today</span>
+                <div class="timeline-today-line"></div>
+              </div>
             </div>
           </div>
         </div>
