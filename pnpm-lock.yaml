@@ -26,6 +26,9 @@ importers:
       semver:
         specifier: ^7.7.3
         version: 7.7.3
+      simple-dom:
+        specifier: ^1.4.0
+        version: 1.4.0
     devDependencies:
       '@babel/core':
         specifier: ^7.28.4
@@ -99,9 +102,6 @@ importers:
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.5)
-      ember-cli-deprecation-workflow:
-        specifier: ^3.4.0
-        version: 3.4.0(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5))
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -1401,6 +1401,15 @@ packages:
 
   '@simple-dom/interface@1.4.0':
     resolution: {integrity: sha512-l5qumKFWU0S+4ZzMaLXFU8tQZsicHEMEyAxI5kDFGhJsRqDwe0a7/iPA/GdxlGyDKseQQAgIz5kzU7eXTrlSpA==}
+
+  '@simple-dom/parser@1.4.0':
+    resolution: {integrity: sha512-TNjDkOehueRIKr1df416qk9ELj+qWuVVJNIT25y1aZg3pQvxv4UPGrgaDFte7dsWBTbF3V8NYPNQ5FDUZQ8Wlg==}
+
+  '@simple-dom/serializer@1.4.0':
+    resolution: {integrity: sha512-mI1yRahsVs8atXLiQksineDsFEFqeG7RHwnnBTDOK6inbzl4tZQgjR+Z7edjgIJq5j5RhZvwPI6EuCji9B3eQw==}
+
+  '@simple-dom/void-map@1.4.0':
+    resolution: {integrity: sha512-VDhLEyVCbuhOBBgHol9ShzIv9O8UCzdXeH4FoXu2DOcu/nnvTjLTck+BgXsCLv5ynDiUdoqsREEVFnoyPpFKVw==}
 
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
@@ -2751,12 +2760,6 @@ packages:
     engines: {node: 16.* || 18.* || >= 20}
     peerDependencies:
       '@babel/core': ^7.12.0
-
-  ember-cli-deprecation-workflow@3.4.0:
-    resolution: {integrity: sha512-Ksrmib4mjD4xa0dqFgxJLBwkSp9EVYH6jSqe2NpODlBKEAZhsVzQj5wKPnC1dXfK3Erq/r1Fh3q4g46FZiCUiw==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      ember-source: '>= 3.28.0'
 
   ember-cli-get-component-path-option@1.0.0:
     resolution: {integrity: sha512-k47TDwcJ2zPideBCZE8sCiShSxQSpebY2BHcX2DdipMmBox5gsfyVrbKJWIHeSTTKyEUgmBIvQkqTOozEziCZA==}
@@ -5334,6 +5337,9 @@ packages:
   simple-concat@1.0.1:
     resolution: {integrity: sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q==}
 
+  simple-dom@1.4.0:
+    resolution: {integrity: sha512-TnBPkmOyjdaOqyBMb4ick+n8c0Xv9Iwg1PykFV7hz9Se3UCiacTbRb+25cPmvozFNJLBUNvUzX/KsPfXF14ivA==}
+
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
@@ -7723,6 +7729,16 @@ snapshots:
 
   '@simple-dom/interface@1.4.0': {}
 
+  '@simple-dom/parser@1.4.0':
+    dependencies:
+      '@simple-dom/interface': 1.4.0
+
+  '@simple-dom/serializer@1.4.0':
+    dependencies:
+      '@simple-dom/interface': 1.4.0
+
+  '@simple-dom/void-map@1.4.0': {}
+
   '@sindresorhus/merge-streams@4.0.0': {}
 
   '@socket.io/component-emitter@3.1.2': {}
@@ -9271,14 +9287,6 @@ snapshots:
       ensure-posix-path: 1.1.1
       resolve-package-path: 4.0.3
       semver: 7.7.3
-    transitivePeerDependencies:
-      - supports-color
-
-  ember-cli-deprecation-workflow@3.4.0(ember-source@6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5)):
-    dependencies:
-      '@babel/core': 7.28.5
-      ember-cli-babel: 8.2.0(@babel/core@7.28.5)
-      ember-source: 6.8.0(@glimmer/component@2.0.0)(rsvp@4.8.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -12495,6 +12503,14 @@ snapshots:
       - supports-color
 
   simple-concat@1.0.1: {}
+
+  simple-dom@1.4.0:
+    dependencies:
+      '@simple-dom/document': 1.4.0
+      '@simple-dom/interface': 1.4.0
+      '@simple-dom/parser': 1.4.0
+      '@simple-dom/serializer': 1.4.0
+      '@simple-dom/void-map': 1.4.0
 
   simple-get@4.0.1:
     dependencies:

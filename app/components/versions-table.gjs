@@ -1,33 +1,19 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { action } from '@ember/object';
-import { on } from '@ember/modifier';
-import { fn, get } from '@ember/helper';
 import { ChangelogData } from '../lib/git-utils.js';
 import semver from 'semver';
 import VersionsTimeline from './versions-timeline.gjs';
 import './versions-table.css';
+import { service } from '@ember/service';
+import VersionSupport from '/data/version-support.json';
+import { LinkTo } from "@ember/routing";
 
 const eq = (a, b) => a === b;
 
 export default class VersionsTable extends Component {
   @tracked data = new ChangelogData();
   @tracked versionSupport = [];
-
-  constructor() {
-    super(...arguments);
-    this.loadData();
-  }
-
-  async loadData() {
-    try {
-      await this.data.load();
-      const supportModule = await import('/data/version-support.json');
-      this.versionSupport = supportModule.default;
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    }
-  }
+  @service fastboot;
 
   get versions() {
     if (!this.data.commitData) return [];
@@ -63,7 +49,7 @@ export default class VersionsTable extends Component {
     const groups = [];
 
     // Use version-support.json as the source of truth
-    this.versionSupport.forEach((supportEntry) => {
+    VersionSupport.forEach((supportEntry) => {
       // Extract the display version (with leading zeros preserved)
       const displayMatch = supportEntry.version.match(/v?(\d+\.\d+)/);
       const displayMinorKey = displayMatch ? displayMatch[1] : null;
@@ -233,11 +219,11 @@ export default class VersionsTable extends Component {
               <div class="card-header">
                 <div class="version-title">
                   {{#if (eq group.supportInfo.status "in-development")}}
-                    <a href="/changelog/latest" class="version-link">v{{group.minorVersion}}</a>
+                    <LinkTo @route="changelog" @model="latest" class="version-link">v{{group.minorVersion}}</LinkTo>
                   {{else if (eq group.supportInfo.status "upcoming")}}
                     <span class="version-name">v{{group.minorVersion}}</span>
                   {{else}}
-                    <a href="/changelog/{{group.headerVersion.version}}" class="version-link">v{{group.minorVersion}}</a>
+                    <LinkTo @route="changelog" @model={{group.headerVersion.version}} class="version-link">v{{group.minorVersion}}</LinkTo>
                   {{/if}}
                   {{#if group.supportInfo.isESR}}
                     <span class="esr-indicator">ESR</span>
@@ -302,7 +288,7 @@ export default class VersionsTable extends Component {
                   <div class="patch-versions">
                     {{#each group.versions as |v|}}
                       <div class="patch-version-row">
-                        <a href="/changelog/{{v.version}}" class="patch-version-link">{{v.version}}</a>
+                        <LinkTo @route="changelog" @model={{v.version}} class="patch-version-link">{{v.version}}</LinkTo>
                         <span class="relative-date">
                           {{this.getRelativeTime v.date}}
                           <span class="date-badge">{{this.formatDate v.date}}</span>

@@ -1,24 +1,13 @@
 import { tracked } from '@glimmer/tracking';
 import semver from 'semver';
+import NewFeaturesData from "/data/new-features.json";
+import CommitsData from "/data/commits.json";
+
 
 export class ChangelogData {
-  @tracked commitData = null;
-  @tracked newFeatures = [];
+  @tracked commitData = CommitsData;
+  @tracked newFeatures = NewFeaturesData;
   @tracked isLoading = false;
-
-  async load() {
-    this.isLoading = true;
-    try {
-      const [commitsModule, featuresModule] = await Promise.all([
-        import('/data/commits.json'),
-        import('/data/new-features.json'),
-      ]);
-      this.commitData = commitsModule.default;
-      this.newFeatures = featuresModule.default;
-    } finally {
-      this.isLoading = false;
-    }
-  }
 
   get baseTag() {
     return this.commitData?.baseTag || '';

@@ -6,9 +6,9 @@ import config from 'discourse-changelog/config/environment';
 import { importSync, isDevelopingApp, macroCondition } from '@embroider/macros';
 import setupInspector from '@embroider/legacy-inspector-support/ember-source-4.12';
 
-if (macroCondition(isDevelopingApp())) {
-  importSync('./deprecation-workflow');
-}
+// if (macroCondition(isDevelopingApp())) {
+//   importSync('./deprecation-workflow');
+// }
 
 export default class App extends Application {
   modulePrefix = config.modulePrefix;

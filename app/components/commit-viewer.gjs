@@ -32,11 +32,6 @@ export default class CommitViewer extends Component {
   @tracked endAdvancedMode = false;
   @tracked showSelectorUI = false;
 
-  constructor() {
-    super(...arguments);
-    this.loadData();
-  }
-
   async loadData() {
     try {
       await this.data.load();
