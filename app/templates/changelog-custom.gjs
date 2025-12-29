@@ -1,8 +1,11 @@
 import CommitViewer from "../components/commit-viewer";
 import { pageTitle } from 'ember-page-title';
 
+import metaDescription from '../helpers/meta-description';
+
 <template>
 {{pageTitle "Changelog"}}
+{{metaDescription "Custom changelog viewer" }}
 
 <CommitViewer
   @start={{@controller.start}}

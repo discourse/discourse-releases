@@ -20,8 +20,6 @@ import config from 'discourse-changelog/config/environment';
 
 const eq = helper(([a, b]) => a === b);
 
-
-
 const DEFAULT_START_REF = 'v2025.11.0';
 const DEFAULT_END_REF = 'latest';
 
