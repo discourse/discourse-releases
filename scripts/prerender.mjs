@@ -2,7 +2,7 @@
 
 import { mkdir, readFile, writeFile } from "fs/promises";
 import { JSDOM } from "jsdom";
-import commitsData from "../data/commits.json" assert { type: "json" };
+import commitsData from "../data/commits.json" with { type: "json" };
 import { dirname } from "node:path";
 
 globalThis.window = globalThis;
