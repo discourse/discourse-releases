@@ -43,7 +43,7 @@
 .logo {
   height: 32px;
   width: auto;
-  fill: currentColor;
+  fill: currentcolor;
   flex-shrink: 0;
 }
 

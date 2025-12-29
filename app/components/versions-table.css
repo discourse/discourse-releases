@@ -23,7 +23,7 @@
 }
 
 .version-info p {
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem;
   line-height: 1.7;
   color: var(--text-primary);
 }
@@ -60,7 +60,7 @@
 }
 
 .version-card:target {
-  box-shadow: oklch(from var(--color-active-development) l c h / 0.3) 0 4px 12px;
+  box-shadow: oklch(from var(--color-active-development) l c h / 30%) 0 4px 12px;
   transform: scale(1.01);
 }
 
@@ -162,7 +162,7 @@
 }
 
 .version-card.eol-version .card-header {
-  background: oklch(from var(--color-end-of-life) l c h / 0.15);
+  background: oklch(from var(--color-end-of-life) l c h / 15%);
 }
 
 .version-card.eol-version {
@@ -170,11 +170,11 @@
 }
 
 .version-card.active-version .card-header {
-  background: oklch(from var(--color-supported) l c h / 0.2);
+  background: oklch(from var(--color-supported) l c h / 20%);
 }
 
 .version-card.in-development-version .card-header {
-  background: oklch(from var(--color-active-development) l c h / 0.2);
+  background: oklch(from var(--color-active-development) l c h / 20%);
 }
 
 .esr-indicator {

@@ -94,7 +94,7 @@
 }
 
 .commit-sha:hover {
-  background: oklch(from var(--color-active-development) l c h / 0.15);
+  background: oklch(from var(--color-active-development) l c h / 15%);
   border-color: var(--color-active-development);
   color: var(--color-active-development);
 }

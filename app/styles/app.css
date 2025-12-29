@@ -187,15 +187,16 @@ body {
   color: var(--text-primary);
 }
 
+.input-group select {
+  cursor: pointer;
+}
+
 .input-group input:focus,
 .input-group select:focus {
   outline: none;
   border-color: var(--color-active-development);
 }
 
-.input-group select {
-  cursor: pointer;
-}
 
 .input-help {
   display: block;
