@@ -20,6 +20,7 @@ async function preRender(path, output) {
     const result = await render(path);
     await mkdir(dirname(output), { recursive: true });
     await writeFile(output, result);
+    console.log(`Rendered: ${path}`);
   } catch (e) {
     console.error(`Error Rendering path: ${e.message}`);
     throw e;
