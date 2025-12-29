@@ -16,13 +16,11 @@
     <link integrity="" rel="stylesheet" href="/@embroider/virtual/app.css">
 
     {{content-for "head-footer"}}
-
-    <!-- EMBER_CLI_FASTBOOT_HEAD -->
   </head>
   <body>
     {{content-for "body"}}
 
-    <!-- EMBER_CLI_FASTBOOT_BODY -->
+    <div id="main-outlet"></div>
 
     <script src="/@embroider/virtual/vendor.js" vite-ignore></script>
     <script type="module" src="/start-app.js"></script>

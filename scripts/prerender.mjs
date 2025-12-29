@@ -1,19 +1,11 @@
 import { readFile, writeFile, mkdir } from 'fs/promises';
-import SimpleDOM from 'simple-dom/dist/commonjs/es5/index.js';
-import { join } from 'path';
+import { JSDOM } from 'jsdom';
 import Module from 'node:module';
 
 const require = Module.createRequire(import.meta.url);
 
 const commitsData = JSON.parse(await readFile('data/commits.json', 'utf8'));
 
-global.FastBoot = {
-  require(thing) {
-    require(thing);
-  },
-};
-
-import Result from './result.mjs';
 import { dirname } from 'node:path';
 
 globalThis.window = globalThis;
@@ -27,13 +19,10 @@ let instance = App.create({
 });
 
 async function preRender(path, output) {
-  console.log(`Rendering ${path}`);
   try {
     const result = await render(path, instance);
-
-    result._finalizeHTML();
     await mkdir(dirname(output), { recursive: true });
-    await writeFile(output, await result.html());
+    await writeFile(output, result);
   } catch (e) {
     console.error(`Error Rendering path: ${e.message}`);
     throw e;
@@ -41,20 +30,20 @@ async function preRender(path, output) {
 }
 
 function buildBootOptions() {
-  let doc = new SimpleDOM.Document();
-  let rootElement = doc.body;
+  const dom = new JSDOM(wrapperHTML);
   return {
     isBrowser: false,
-    document: doc,
-    rootElement,
+    jsdom: dom,
+    rootElement: dom.window.document.querySelector('#main-outlet'),
     shouldRender: true,
   };
 }
 
 async function render(url, instance) {
   let bootOptions = buildBootOptions();
+  globalThis.document = bootOptions.jsdom.window.document;
   await instance.visit(url, bootOptions);
-  return new Result(bootOptions.document, wrapperHTML, {});
+  return bootOptions.jsdom.serialize();
 }
 
 const changelogRoutes = [

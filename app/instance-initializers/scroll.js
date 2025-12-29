@@ -1,7 +1,7 @@
 export default {
   initialize(owner){
     owner.lookup('service:router').on('routeDidChange', () => {
-      if(!window.FastBoot){
+      if (!import.meta.env.SSR) {
         window.scrollTo(0,0);
       }
     });

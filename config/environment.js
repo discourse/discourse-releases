@@ -5,6 +5,7 @@ module.exports = function (environment) {
     modulePrefix: 'discourse-changelog',
     environment,
     rootURL: '/',
+    rootElement: "#main-outlet",
     locationType: 'history',
     EmberENV: {
       EXTEND_PROTOTYPES: false,
