@@ -97,4 +97,77 @@ module('Acceptance | changelog version', function (hooks) {
     assert.dom('.feature-card .feature-title').exists();
     assert.dom('.feature-card .feature-description').exists();
   });
+
+  test('toggles selector UI with start and end dropdowns', async function (assert) {
+    // Initially hidden
+    assert.dom('.form-section').doesNotExist();
+
+    // Click to show
+    await click('.toggle-selector-btn');
+    assert.dom('.form-section').exists();
+    assert.dom('#start-ref').hasTagName('select');
+    assert.dom('#end-ref').hasTagName('select');
+    assert.dom('.advanced-toggle').exists({ count: 2 });
+    assert.dom('.toggle-selector-btn').hasText(/Hide/);
+
+    // Click to hide
+    await click('.toggle-selector-btn');
+    assert.dom('.form-section').doesNotExist();
+    assert.dom('.toggle-selector-btn').hasText(/Customize/);
+  });
+
+  test('advanced mode switches between dropdown and text input', async function (assert) {
+    await click('.toggle-selector-btn');
+
+    // Check start ref advanced mode
+    assert.dom('#start-ref').hasTagName('select');
+    await click(findAll('.advanced-toggle')[0]);
+    assert.dom('#start-ref').hasTagName('input');
+    assert.dom('#start-ref').hasAttribute('placeholder', /commit hash/);
+    assert.dom(findAll('.advanced-toggle')[0]).hasText(/Use Dropdown/);
+
+    // Check end ref advanced mode
+    assert.dom('#end-ref').hasTagName('select');
+    await click(findAll('.advanced-toggle')[1]);
+    assert.dom('#end-ref').hasTagName('input');
+    assert.dom('#end-ref').hasAttribute('placeholder', /commit hash/);
+    assert.dom(findAll('.advanced-toggle')[1]).hasText(/Use Dropdown/);
+  });
+
+  test('changing end ref in dropdown mode navigates to new version', async function (assert) {
+    await click('.toggle-selector-btn');
+
+    // Change end ref to a different version
+    await fillIn('#end-ref', 'v2025.12.0-latest');
+
+    // Should navigate to /changelog/v2025.12.0-latest
+    assert.true(currentURL().includes('/changelog/v2025.12.0-latest'));
+    assert.dom('.changelog-range').hasText(/v2025\.12\.0-latest/);
+  });
+
+  test('changing start ref in dropdown mode navigates to custom route', async function (assert) {
+    await click('.toggle-selector-btn');
+
+    // Change start ref to a specific version
+    await fillIn('#start-ref', 'v3.4.1');
+
+    // Should navigate to /changelog/custom with query params
+    assert.true(currentURL().startsWith('/changelog/custom?'));
+    assert.true(currentURL().includes('start=v3.4.1'));
+    assert.dom('.changelog-range').hasText(/v3\.4\.1/);
+  });
+
+  test('entering commit hash in advanced mode navigates correctly', async function (assert) {
+    await click('.toggle-selector-btn');
+
+    // Switch to advanced mode for start
+    await click(findAll('.advanced-toggle')[0]);
+
+    // Enter a commit hash
+    await fillIn('#start-ref', '0005565fb3ebf11137ab93a312828863d25f3e2c');
+
+    // Should navigate to /changelog/custom with the commit hash
+    assert.true(currentURL().startsWith('/changelog/custom?'));
+    assert.true(currentURL().includes('start=0005565fb3ebf11137ab93a312828863d25f3e2c'));
+  });
 });

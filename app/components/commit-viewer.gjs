@@ -16,6 +16,7 @@ import {
   parseVersion,
   COMMIT_TYPES
 } from '../lib/git-utils.js';
+import config from 'discourse-changelog/config/environment';
 
 const eq = helper(([a, b]) => a === b);
 
@@ -275,6 +276,11 @@ export default class CommitViewer extends Component {
     return this.endHash.trim() || DEFAULT_END_REF;
   }
 
+  get bufferSize() {
+    // In test mode, render all commits to avoid flaky tests
+    return config.environment === 'test' ? 9999 : 5;
+  }
+
   <template>
     <div class="commit-viewer">
       <a href="/" class="back-to-versions">← Back to Versions</a>
@@ -468,7 +474,7 @@ export default class CommitViewer extends Component {
             @tagName="div"
             @class="commits-list"
             @containerSelector="body"
-            @bufferSize={{5}}
+            @bufferSize={{this.bufferSize}}
             as |commit|
           >
             <CommitCard @commit={{commit}} @searchTerm={{this.filterText}} />
