@@ -1,14 +1,7 @@
-// import loadConfigFromMeta from '@embroider/config-meta-loader';
+import loadConfigFromMeta from '@embroider/config-meta-loader';
 import { assert } from '@ember/debug';
 
-// const config = loadConfigFromMeta('discourse-changelog');
-
-const config = {
-  modulePrefix: 'discourse-changelog',
-  rootURL: '/',
-  locationType: 'history',
-  APP: {},
-}
+const config = loadConfigFromMeta('discourse-changelog');
 
 assert(
   'config is not an object',
