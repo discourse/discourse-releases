@@ -14,6 +14,7 @@ global.FastBoot = {
 };
 
 import Result from './result.mjs';
+import { dirname } from 'node:path';
 
 globalThis.window = globalThis;
 
@@ -25,14 +26,14 @@ let instance = App.create({
   modulePrefix: 'discourse-changelog',
 });
 
-async function preRender(path) {
+async function preRender(path, output) {
   console.log(`Rendering ${path}`);
   try {
     const result = await render(path, instance);
 
     result._finalizeHTML();
-    await mkdir(join('dist', path), { recursive: true });
-    await writeFile(join('dist', path, 'index.html'), await result.html());
+    await mkdir(dirname(output), { recursive: true });
+    await writeFile(output, await result.html());
   } catch (e) {
     console.error(`Error Rendering path: ${e.message}`);
     throw e;
@@ -64,9 +65,10 @@ const changelogRoutes = [
 const routesToPrerender = [
   '/',
   '/changelog/custom',
-  ...changelogRoutes
+  ...changelogRoutes,
 ];
 
 for (let path of routesToPrerender) {
-  await preRender(path);
+  await preRender(path, `dist${path}/index.html`);
 }
+await preRender('/404', `dist/404.html`);

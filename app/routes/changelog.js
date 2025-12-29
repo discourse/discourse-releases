@@ -17,9 +17,7 @@ export default class ChangelogRoute extends Route {
     const isValidTag = CommitsData.refs.tags[end] !== undefined;
 
     if (!isValidBranch && !isValidTag) {
-      this.router.transitionTo('changelog-custom', {
-        queryParams: { start: null, end: end }
-      });
+      throw new Error('Not Found');
     }
   }
 
