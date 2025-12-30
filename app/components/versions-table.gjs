@@ -299,7 +299,7 @@ export default class VersionsTable extends Component {
                     {{#if (this.isPlannedDate group.headerVersion.date)}}
                       Planned release
                     {{else}}
-                      Released
+                      First released
                     {{/if}}
                   </div>
                   <div class="card-value">
