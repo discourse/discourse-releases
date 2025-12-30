@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "vite build && BUILD_SSR=true vite build && node ./scripts/prerender.mjs",
-    "build:data": "node lib/write-commit-info.mjs && node lib/fetch-new-features.mjs",
+    "build:data": "concurrently 'node lib/write-commit-info.mjs' 'node lib/fetch-new-features.mjs'",
     "build:full": "pnpm build:data && pnpm build",
     "format": "prettier . --cache --write",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\" --prefixColors auto",
