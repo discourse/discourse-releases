@@ -1,11 +1,19 @@
 [
   {
+    "version": "2026.01",
+    "releaseDate": "2026-01",
+    "developmentStartDate": "2025-12-30",
+    "supportEndDate": "2026-09",
+    "isESR": false,
+    "status": "in-development"
+  },
+  {
     "version": "2025.12",
-    "releaseDate": "2025-12",
+    "releaseDate": "2025-12-25",
     "developmentStartDate": "2025-11-25",
     "supportEndDate": "2026-02",
     "isESR": false,
-    "status": "in-development"
+    "status": "active"
   },
   {
     "version": "2025.11",
