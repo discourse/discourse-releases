@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "vite build && BUILD_SSR=true vite build && node ./scripts/prerender.mjs",
-    "build:data": "concurrently 'node lib/write-commit-info.mjs' 'node lib/fetch-new-features.mjs'",
+    "build:data": "concurrently 'node lib/write-commit-info.mjs' 'node lib/fetch-new-features.mjs' 'node lib/fetch-security-advisories.mjs'",
+    "build:data:advisories": "node lib/fetch-security-advisories.mjs",
     "build:full": "pnpm build:data && pnpm build",
     "format": "prettier . --cache --write",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\" --prefixColors auto",

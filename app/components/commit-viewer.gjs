@@ -7,6 +7,7 @@ import config from "discourse-changelog/config/environment";
 import {
   ChangelogData,
   countCommitsByType,
+  filterAdvisoriesByCommits,
   filterCommits,
   filterFeaturesByCommits,
   sortCommitsByDate,
@@ -15,6 +16,7 @@ import CommitCard from "./commit-card";
 import CommitFilter from "./commit-filter";
 import FeatureCard from "./feature-card";
 import RefSelector from "./ref-selector";
+import SecurityAdvisoryCard from "./security-advisory-card";
 
 const data = new ChangelogData();
 
@@ -77,6 +79,11 @@ export default class CommitViewer extends Component {
     return filterFeaturesByCommits(data.newFeatures, this.allCommits, (ref) =>
       data.resolveRef(ref)
     );
+  }
+
+  @cached
+  get matchingAdvisories() {
+    return filterAdvisoriesByCommits(data.securityAdvisories, this.allCommits);
   }
 
   @action
@@ -178,6 +185,19 @@ export default class CommitViewer extends Component {
           <div class="features-section">
             {{#each this.matchingFeatures as |feature|}}
               <FeatureCard @feature={{feature}} />
+            {{/each}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if this.matchingAdvisories.length}}
+        <div class="section">
+          <div class="section-header">
+            <h2>Security Fixes</h2>
+          </div>
+          <div class="advisories-section">
+            {{#each this.matchingAdvisories as |advisory|}}
+              <SecurityAdvisoryCard @advisory={{advisory}} />
             {{/each}}
           </div>
         </div>

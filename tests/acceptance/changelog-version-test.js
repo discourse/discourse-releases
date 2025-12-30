@@ -181,4 +181,15 @@ module("Acceptance | changelog version", function (hooks) {
       currentURL().includes("start=0005565fb3ebf11137ab93a312828863d25f3e2c")
     );
   });
+
+  test("security advisory cards are displayed for v2025.12.0", async function (assert) {
+    await visit("/changelog/v2025.12.0");
+
+    assert.dom(".security-advisory-card").exists();
+    assert.dom(".advisory-cve").hasText(/CVE-/);
+    assert.dom(".advisory-summary").exists();
+    assert
+      .dom(".security-advisory-card")
+      .hasAttribute("href", /github\.com.*security.*advisories/);
+  });
 });

@@ -1,11 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import CommitsData from "/data/commits.json";
 import NewFeaturesData from "/data/new-features.json";
+import SecurityAdvisoriesData from "/data/security-advisories.json";
 import semver from "semver";
 
 export class ChangelogData {
   @tracked commitData = CommitsData;
   @tracked newFeatures = NewFeaturesData;
+  @tracked securityAdvisories = SecurityAdvisoriesData;
   @tracked isLoading = false;
 
   get baseTag() {
@@ -311,6 +313,27 @@ export function filterCommits(commits, { type, searchTerm } = {}) {
   return filtered;
 }
 
+// Get version range from commits
+function getVersionRange(commits) {
+  if (!commits.length) {
+    return { newest: null, oldest: null };
+  }
+  const sorted = sortCommitsByDate(commits, "desc");
+  return {
+    newest: parseVersion(sorted[0].version?.replace(/\s*\+\d+$/, "")),
+    oldest: parseVersion(sorted.at(-1).version?.replace(/\s*\+\d+$/, "")),
+  };
+}
+
+// Check if a version falls within a range (exclusive start, inclusive end)
+function versionInRange(version, oldest, newest) {
+  const parsed = parseVersion(version);
+  if (!parsed || !newest || !oldest) {
+    return false;
+  }
+  return semver.gt(parsed, oldest) && semver.lte(parsed, newest);
+}
+
 // Filter features that fall within a commit range
 export function filterFeaturesByCommits(features, commits, resolveRef) {
   if (!commits.length || !features.length) {
@@ -318,15 +341,7 @@ export function filterFeaturesByCommits(features, commits, resolveRef) {
   }
 
   const commitHashes = new Set(commits.map((c) => c.hash));
-
-  // Get version range from commits (assumes commits are not yet sorted)
-  const sorted = sortCommitsByDate(commits, "desc");
-  const newestVersion = parseVersion(
-    sorted[0].version?.replace(/\s*\+\d+$/, "")
-  );
-  const oldestVersion = parseVersion(
-    sorted.at(-1).version?.replace(/\s*\+\d+$/, "")
-  );
+  const { newest, oldest } = getVersionRange(commits);
 
   return features.filter((feature) => {
     const discourseVersion = feature.discourse_version;
@@ -335,17 +350,26 @@ export function filterFeaturesByCommits(features, commits, resolveRef) {
     }
 
     if (discourseVersion.match(/\d+\.\d+\.\d+/)) {
-      const parsedVersion = parseVersion(discourseVersion);
-      if (!parsedVersion || !newestVersion || !oldestVersion) {
-        return false;
-      }
-      return (
-        semver.gt(parsedVersion, oldestVersion) &&
-        semver.lte(parsedVersion, newestVersion)
-      );
+      return versionInRange(discourseVersion, oldest, newest);
     } else {
       const fullCommitHash = resolveRef(discourseVersion);
       return commitHashes.has(fullCommitHash);
     }
+  });
+}
+
+// Filter security advisories that have a patched version in the commit range
+export function filterAdvisoriesByCommits(advisories, commits) {
+  if (!commits.length || !advisories.length) {
+    return [];
+  }
+
+  const { newest, oldest } = getVersionRange(commits);
+
+  return advisories.filter((advisory) => {
+    // Check if any patched version falls within the range
+    return advisory.patched_versions?.some((version) =>
+      versionInRange(version, oldest, newest)
+    );
   });
 }
