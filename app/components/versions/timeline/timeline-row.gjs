@@ -43,11 +43,13 @@ export default class TimelineRow extends Component {
         <a href="#version-{{@version}}" class="timeline-bar-link">
           {{#if this.hasPhases}}
             <div
-              class="timeline-bar timeline-bar-{{@status}} timeline-bar-development"
+              class="timeline-bar timeline-bar-{{@status}}
+                timeline-bar-development"
               style={{this.devStyle}}
             ></div>
             <div
-              class="timeline-bar timeline-bar-{{@status}} timeline-bar-supported"
+              class="timeline-bar timeline-bar-{{@status}}
+                timeline-bar-supported"
               style={{this.supportedStyle}}
             ></div>
           {{else}}
