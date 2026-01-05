@@ -10,12 +10,6 @@ import highlightTerm from "../modifiers/highlight-term.js";
 
 const expandedCommits = trackedWeakMap(new WeakMap());
 
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
 export default class CommitCard extends Component {
   get commitUrl() {
     return `https://github.com/discourse/discourse/commit/${this.args.commit.hash}`;
@@ -49,7 +43,7 @@ export default class CommitCard extends Component {
       : null;
   }
 
-  get subjectWithLinks() {
+  get formattedSubject() {
     let subject = this.args.commit.subject;
 
     // Strip known type prefixes
@@ -69,10 +63,6 @@ export default class CommitCard extends Component {
     return subject;
   }
 
-  get hasBody() {
-    return this.args.commit.body && this.args.commit.body.trim().length > 0;
-  }
-
   get prNumber() {
     const match = this.args.commit.subject.match(/\(#(\d+)\)/);
     return match ? match[1] : null;
@@ -89,23 +79,8 @@ export default class CommitCard extends Component {
     return expandedCommits.get(this.args.commit) || false;
   }
 
-  get bodyHtml() {
-    if (!this.hasBody) {
-      return "";
-    }
-
-    const body = this.args.commit.body.trim();
-
-    // Escape HTML first
-    const escaped = escapeHtml(body);
-
-    // Then add hyperlinks for URLs (now safe)
-    const withLinks = escaped.replace(
-      /(https?:\/\/[^\s]+)/g,
-      '<a href="$1" target="_blank" rel="noopener noreferrer" class="commit-body-link" onclick="event.stopPropagation()">$1</a>'
-    );
-
-    return htmlSafe(withLinks);
+  get body() {
+    return this.args.commit.body.trim();
   }
 
   @action
@@ -120,11 +95,10 @@ export default class CommitCard extends Component {
       return;
     }
 
-    // Toggle the expanded state in the WeakMap
+    // Store expanded state for future re-renders
     const currentState = expandedCommits.get(this.args.commit) || false;
     expandedCommits.set(this.args.commit, !currentState);
 
-    // Manually toggle the details element to trigger re-render
     const card = event.currentTarget;
     const details = card.querySelector(".commit-details");
     if (details) {
@@ -146,7 +120,7 @@ export default class CommitCard extends Component {
           class="commit-message commit-subject"
           {{highlightTerm searchString=@searchTerm id="search-match"}}
         >
-          {{this.subjectWithLinks}}
+          {{this.formattedSubject}}
         </div>
         <div class="commit-tags">
           {{#if this.commitTypeConfig}}
@@ -196,8 +170,8 @@ export default class CommitCard extends Component {
             <span class="commit-separator">·</span>
             <span class="commit-version">v{{@commit.version}}</span>
           </div>
-          {{#if this.hasBody}}
-            <div class="commit-full-body">{{this.bodyHtml}}</div>
+          {{#if this.body}}
+            <div class="commit-full-body">{{this.body}}</div>
           {{/if}}
         </div>
       </details>

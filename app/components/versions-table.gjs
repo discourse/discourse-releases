@@ -4,10 +4,9 @@ import { LinkTo } from "@ember/routing";
 import "./versions-table.css";
 import VersionSupport from "/data/version-support.json";
 import semver from "semver";
+import eq from "../helpers/eq.js";
 import { ChangelogData } from "../lib/git-utils.js";
 import VersionsTimeline from "./versions-timeline.gjs";
-
-const eq = (a, b) => a === b;
 
 export default class VersionsTable extends Component {
   @tracked data = new ChangelogData();
@@ -254,7 +253,10 @@ export default class VersionsTable extends Component {
                   'in-development-version'
                 }}
                 {{if (eq group.supportInfo.status 'active') 'active-version'}}
-                {{if (eq group.supportInfo.status 'end-of-life') 'eol-version'}}"
+                {{if
+                  (eq group.supportInfo.status 'end-of-life')
+                  'eol-version'
+                }}"
             >
               <div class="card-header">
                 <div class="version-title">
