@@ -4,8 +4,8 @@ import { LinkTo } from "@ember/routing";
 import "./versions-table.css";
 import VersionSupport from "/data/version-support.json";
 import semver from "semver";
-import eq from "../helpers/eq.js";
-import { ChangelogData } from "../lib/git-utils.js";
+import eq from "../../helpers/eq.js";
+import { ChangelogData } from "../../lib/git-utils.js";
 import VersionsTimeline from "./versions-timeline.gjs";
 
 export default class VersionsTable extends Component {

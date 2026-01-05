@@ -1,5 +1,5 @@
 import { pageTitle } from "ember-page-title";
-import CommitViewer from "../components/commit-viewer";
+import CommitViewer from "../components/changelog/commit-viewer";
 import metaDescription from "../helpers/meta-description";
 
 <template>

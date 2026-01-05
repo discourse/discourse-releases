@@ -11,7 +11,7 @@ import {
   filterCommits,
   filterFeaturesByCommits,
   sortCommitsByDate,
-} from "../lib/git-utils.js";
+} from "../../lib/git-utils.js";
 import CommitCard from "./commit-card";
 import CommitFilter from "./commit-filter";
 import FeatureCard from "./feature-card";

@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { trackedWeakMap } from "@ember/reactive/collections";
 import { htmlSafe } from "@ember/template";
 import "./commit-card.css";
-import { COMMIT_TYPES, getCommitType } from "../lib/git-utils.js";
-import highlightTerm from "../modifiers/highlight-term.js";
+import { COMMIT_TYPES, getCommitType } from "../../lib/git-utils.js";
+import highlightTerm from "../../modifiers/highlight-term.js";
 
 const expandedCommits = trackedWeakMap(new WeakMap());
 

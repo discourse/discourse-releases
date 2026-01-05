@@ -1,4 +1,4 @@
-import VersionsTable from "../components/versions-table";
+import VersionsTable from "../components/versions/versions-table";
 import metaDescription from "../helpers/meta-description";
 
 <template>

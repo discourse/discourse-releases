@@ -1,8 +1,8 @@
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import eq from "../helpers/eq.js";
-import { COMMIT_TYPES } from "../lib/git-utils.js";
+import eq from "../../helpers/eq.js";
+import { COMMIT_TYPES } from "../../lib/git-utils.js";
 
 const CommitFilter = <template>
   <div class="filter-section">

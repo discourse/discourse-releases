@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { ChangelogData } from "../lib/git-utils.js";
+import { ChangelogData } from "../../lib/git-utils.js";
 
 const data = new ChangelogData();
 
