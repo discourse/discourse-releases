@@ -2,8 +2,6 @@ import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import "./versions-timeline.css";
 
-const eq = (a, b) => a === b;
-
 export default class VersionsTimeline extends Component {
   normalizeDate(dateString) {
     if (!dateString) {
@@ -120,7 +118,6 @@ export default class VersionsTimeline extends Component {
           widthPercent: devWidthPercent + widthPercent,
           devColor,
           supportedColor,
-          isESR: group.supportInfo?.isESR,
           status: group.supportInfo?.status,
           devWidthPercent: finalDevWidthPercent,
           supportedStartPercent,
@@ -174,15 +171,6 @@ export default class VersionsTimeline extends Component {
                       class="timeline-status-dot timeline-status-{{bar.status}}"
                     ></span>
                     <span class="version-label">v{{bar.version}}</span>
-                    {{#if bar.isESR}}
-                      <span
-                        class="esr-badge
-                          {{if
-                            (eq bar.status 'end-of-life')
-                            'esr-badge-muted'
-                          }}"
-                      >ESR</span>
-                    {{/if}}
                   </div>
                   <div class="timeline-row-timeline">
                     <a

@@ -23,10 +23,11 @@ module("Acceptance | home page", function (hooks) {
     assert.dom(".version-card .card-label").exists();
   });
 
-  test("displays ESR indicator", async function (assert) {
-    assert.dom(".version-card.esr-version").exists();
-    assert.dom(".version-card.esr-version .esr-indicator").exists();
-    assert.dom(".version-card.esr-version .esr-indicator").hasText("ESR");
+  test("displays version tags", async function (assert) {
+    assert.dom(".version-card .version-tag").exists();
+    // Check that tags are displayed with expected content
+    const tags = findAll(".version-tag").map((el) => el.textContent.trim());
+    assert.true(tags.includes("ESR"), "Should have an ESR tag");
   });
 
   test("displays patch versions for released versions", async function (assert) {

@@ -177,8 +177,7 @@
   background: oklch(from var(--color-active-development) l c h / 20%);
 }
 
-.esr-indicator {
-  margin-left: 0.5rem;
+.version-tag {
   display: inline-block;
   padding: 0.15rem 0.4rem;
   background: var(--color-esr);
@@ -189,8 +188,11 @@
   vertical-align: middle;
 }
 
-.version-card.eol-version .esr-indicator {
-  background: var(--color-end-of-life);
+.esr-note {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-left: 0.25rem;
 }
 
 .support-status-active {

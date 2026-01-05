@@ -1,4 +1,5 @@
 .timeline-chart {
+  --label-column-width: 80px;
   background: var(--bg-card);
   border-radius: 8px;
   box-shadow: var(--shadow-sm);
@@ -15,7 +16,7 @@
 }
 
 .timeline-row-label {
-  width: 120px;
+  width: var(--label-column-width);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -103,7 +104,7 @@
 }
 
 .timeline-grid-spacer {
-  width: 120px;
+  width: var(--label-column-width);
   flex-shrink: 0;
 }
 
@@ -129,7 +130,7 @@
 }
 
 .timeline-today-spacer {
-  width: 120px;
+  width: var(--label-column-width);
   flex-shrink: 0;
 }
 
@@ -167,20 +168,6 @@
 
 .version-label {
   color: var(--text-primary);
-}
-
-.esr-badge {
-  display: inline-block;
-  padding: 0.1rem 0.3rem;
-  background: var(--color-esr);
-  color: white;
-  font-size: 0.65rem;
-  font-weight: 600;
-  border-radius: 3px;
-}
-
-.esr-badge-muted {
-  background: var(--color-end-of-life);
 }
 
 .timeline-status-dot {

@@ -254,8 +254,7 @@ export default class VersionsTable extends Component {
                   'in-development-version'
                 }}
                 {{if (eq group.supportInfo.status 'active') 'active-version'}}
-                {{if (eq group.supportInfo.status 'end-of-life') 'eol-version'}}
-                {{if group.supportInfo.isESR 'esr-version'}}"
+                {{if (eq group.supportInfo.status 'end-of-life') 'eol-version'}}"
             >
               <div class="card-header">
                 <div class="version-title">
@@ -274,9 +273,9 @@ export default class VersionsTable extends Component {
                       class="version-link"
                     >v{{group.minorVersion}}</LinkTo>
                   {{/if}}
-                  {{#if group.supportInfo.isESR}}
-                    <span class="esr-indicator">ESR</span>
-                  {{/if}}
+                  {{#each group.supportInfo.tags as |tag|}}
+                    <span class="version-tag">{{tag}}</span>
+                  {{/each}}
                 </div>
                 <div
                   class="status-badge support-status-{{group.supportInfo.status}}"
@@ -335,6 +334,9 @@ export default class VersionsTable extends Component {
                   <div class="card-value">
                     {{#if group.supportInfo.supportEndDate}}
                       {{this.formatDate group.supportInfo.supportEndDate}}
+                      {{#if group.supportInfo.isESR}}
+                        <span class="esr-note">(ESR)</span>
+                      {{/if}}
                     {{else}}
                       <span class="muted-text">—</span>
                     {{/if}}
