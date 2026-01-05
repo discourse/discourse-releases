@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import VerticalCollection from "@html-next/vertical-collection/components/vertical-collection/component";
-import config from "discourse-changelog/config/environment";
+import config from "discourse-releases/config/environment";
 import {
   ChangelogData,
   countCommitsByType,

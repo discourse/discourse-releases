@@ -1,6 +1,8 @@
-# Discourse Changelog
+# Discourse Releases
 
-A web application for browsing Discourse release history, changelogs, and version information. Built with Ember.js and deployed to GitHub Pages.
+A web application for browsing Discourse release history, changelogs, and version support information. Built with Ember.js and deployed to GitHub Pages.
+
+Live at: [releases.discourse.org](https://releases.discourse.org)
 
 ## Prerequisites
 
@@ -14,7 +16,7 @@ You will need the following things properly installed on your computer.
 ## Installation
 
 - `git clone <repository-url>` this repository
-- `cd discourse-changelog`
+- `cd discourse-releases`
 - `pnpm install`
 
 ## Running / Development
@@ -26,13 +28,14 @@ You will need the following things properly installed on your computer.
 
 The application requires data files to be generated from the Discourse repository:
 
-- `pnpm build:data` - Generate commits.json and new-features.json
+- `pnpm build:data` - Generate commits.json, new-features.json, and security-advisories.json
 
 This will:
 
 1. Clone the Discourse repository to `tmp/discourse-repo`
 2. Extract commit information and generate `data/commits.json`
 3. Fetch new features from meta.discourse.org to `data/new-features.json`
+4. Fetch security advisories from GitHub to `data/security-advisories.json`
 
 **Note**: This process can take several minutes and requires git to be installed.
 
@@ -52,7 +55,7 @@ This will:
 
 ### Deploying
 
-This application automatically deploys to GitHub Pages (at discourse-changelog.dtaylor.uk) when changes are pushed to the `main` branch. The deployment workflow generates the data files and builds the site.
+This application automatically deploys to GitHub Pages when changes are pushed to the `main` branch. The deployment workflow generates the data files and builds the site.
 
 ## Further Reading / Useful Links
 

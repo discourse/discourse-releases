@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupApplicationTest } from "discourse-changelog/tests/helpers";
+import { setupApplicationTest } from "discourse-releases/tests/helpers";
 
 module("Acceptance | error handling", function (hooks) {
   setupApplicationTest(hooks);

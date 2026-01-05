@@ -1,6 +1,6 @@
 import { currentURL, visit } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupApplicationTest } from "discourse-changelog/tests/helpers";
+import { setupApplicationTest } from "discourse-releases/tests/helpers";
 
 module("Acceptance | changelog custom route", function (hooks) {
   setupApplicationTest(hooks);

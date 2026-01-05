@@ -1,6 +1,6 @@
 import { click, currentURL, fillIn, findAll, visit } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import { setupApplicationTest } from "discourse-changelog/tests/helpers";
+import { setupApplicationTest } from "discourse-releases/tests/helpers";
 
 module("Acceptance | changelog version", function (hooks) {
   setupApplicationTest(hooks);

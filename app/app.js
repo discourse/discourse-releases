@@ -3,7 +3,7 @@ import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.1
 import compatModules from "@embroider/virtual/compat-modules";
 import loadInitializers from "ember-load-initializers";
 import Resolver from "ember-resolver";
-import config from "discourse-changelog/config/environment";
+import config from "discourse-releases/config/environment";
 
 export default class App extends Application {
   modulePrefix = config.modulePrefix;

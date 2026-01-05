@@ -12,7 +12,7 @@ const wrapperHTML = await readFile("dist/index.html", "utf8");
 
 let instance = App.create({
   autoboot: false,
-  modulePrefix: "discourse-changelog",
+  modulePrefix: "discourse-releases",
 });
 
 async function preRender(path, output) {

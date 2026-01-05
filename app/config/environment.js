@@ -1,7 +1,7 @@
 import { assert } from "@ember/debug";
 import loadConfigFromMeta from "@embroider/config-meta-loader";
 
-const config = loadConfigFromMeta("discourse-changelog");
+const config = loadConfigFromMeta("discourse-releases");
 
 assert(
   "config is not an object",

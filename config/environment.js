@@ -2,7 +2,7 @@
 
 module.exports = function (environment) {
   const ENV = {
-    modulePrefix: "discourse-changelog",
+    modulePrefix: "discourse-releases",
     environment,
     rootURL: "/",
     rootElement: "#main-outlet",
