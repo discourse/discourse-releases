@@ -4,15 +4,6 @@ A web application for browsing Discourse release history, changelogs, and versio
 
 Live at: [releases.discourse.org](https://releases.discourse.org)
 
-## Prerequisites
-
-You will need the following things properly installed on your computer.
-
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/)
-- [pnpm](https://pnpm.io/)
-- [Google Chrome](https://google.com/chrome/)
-
 ## Installation
 
 - `git clone <repository-url>` this repository
@@ -56,10 +47,4 @@ This will:
 
 This application automatically deploys to GitHub Pages when changes are pushed to the `main` branch. The deployment workflow generates the data files and builds the site.
 
-## Further Reading / Useful Links
-
-- [ember.js](https://emberjs.com/)
-- [Vite](https://vite.dev)
-- Development Browser Extensions
-  - [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  - [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+To keep commit data fresh, deploys are re-run every 15 minutes, and can also be triggered manually by repository owners.
