@@ -8,6 +8,9 @@
   --color-end-of-life: #95a5a6;
   --color-today: #e74c3c;
 
+  /* UI colors */
+  --color-notice: #9b59b6;
+
   /* Light mode colors */
   --bg-page: #f5f5f5;
   --bg-card: white;

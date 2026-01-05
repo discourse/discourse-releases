@@ -22,7 +22,6 @@ You will need the following things properly installed on your computer.
 ## Running / Development
 
 - `pnpm start` - Start the development server
-- Visit your app at [http://localhost:5173](http://localhost:5173)
 
 ### Generating Data Files
 

@@ -218,159 +218,159 @@ export default class VersionsTable extends Component {
   <template>
     <div class="versions-container">
 
-      {{#if this.data.isLoading}}
-        <div class="loading">Loading versions...</div>
-      {{else}}
-        <div class="version-info">
-          <p>
-            Discourse releases new versions every month, which are supported
-            with critical bug fixes and security updates for approximately two
-            months. Every 6 months, one of those releases is designated as an
-            Extended Support Release (ESR) version. This will be supported for
-            approximately 8 months, providing an option for users who prefer
-            less frequent updates.
-          </p>
-          <p>
-            Below is a timeline and list of Discourse versions, their release
-            dates, end-of-life dates, and support status. Click on a version to
-            view its changelog.
-          </p>
-        </div>
+      <div class="feedback-banner">
+        <span class="feedback-icon">✨</span>
+        <span class="feedback-text">
+          This site is new! Let us know what you think
+          <a
+            href="https://meta.discourse.org/t/392712"
+            target="_blank"
+            rel="noopener"
+          >on Meta</a>.
+        </span>
+      </div>
 
-        <VersionsTimeline @versions={{this.groupedVersions}} />
+      <div class="version-info">
+        <p>
+          Discourse releases new versions every month, which are supported with
+          critical bug fixes and security updates for approximately two months.
+          Every 6 months, one of those releases is designated as an Extended
+          Support Release (ESR) version. This will be supported for
+          approximately 8 months, providing an option for users who prefer less
+          frequent updates.
+        </p>
+        <p>
+          Below is a timeline and list of Discourse versions, their release
+          dates, end-of-life dates, and support status. Click on a version to
+          view its changelog.
+        </p>
+      </div>
 
-        <div class="versions-cards">
-          {{#each this.groupedVersions as |group|}}
-            <div
-              id="version-{{group.minorVersion}}"
-              class="version-card
-                {{if
-                  (eq group.supportInfo.status 'upcoming')
-                  'upcoming-version'
-                }}
-                {{if
-                  (eq group.supportInfo.status 'in-development')
-                  'in-development-version'
-                }}
-                {{if (eq group.supportInfo.status 'active') 'active-version'}}
-                {{if
-                  (eq group.supportInfo.status 'end-of-life')
-                  'eol-version'
-                }}"
-            >
-              <div class="card-header">
-                <div class="version-title">
-                  {{#if (eq group.supportInfo.status "in-development")}}
-                    <LinkTo
-                      @route="changelog"
-                      @model="latest"
-                      class="version-link"
-                    >v{{group.minorVersion}}</LinkTo>
-                  {{else if (eq group.supportInfo.status "upcoming")}}
-                    <span class="version-name">v{{group.minorVersion}}</span>
+      <VersionsTimeline @versions={{this.groupedVersions}} />
+
+      <div class="versions-cards">
+        {{#each this.groupedVersions as |group|}}
+          <div
+            id="version-{{group.minorVersion}}"
+            class="version-card
+              {{if (eq group.supportInfo.status 'upcoming') 'upcoming-version'}}
+              {{if
+                (eq group.supportInfo.status 'in-development')
+                'in-development-version'
+              }}
+              {{if (eq group.supportInfo.status 'active') 'active-version'}}
+              {{if (eq group.supportInfo.status 'end-of-life') 'eol-version'}}"
+          >
+            <div class="card-header">
+              <div class="version-title">
+                {{#if (eq group.supportInfo.status "in-development")}}
+                  <LinkTo
+                    @route="changelog"
+                    @model="latest"
+                    class="version-link"
+                  >v{{group.minorVersion}}</LinkTo>
+                {{else if (eq group.supportInfo.status "upcoming")}}
+                  <span class="version-name">v{{group.minorVersion}}</span>
+                {{else}}
+                  <LinkTo
+                    @route="changelog"
+                    @model={{group.headerVersion.version}}
+                    class="version-link"
+                  >v{{group.minorVersion}}</LinkTo>
+                {{/if}}
+                {{#each group.supportInfo.tags as |tag|}}
+                  <span class="version-tag">{{tag}}</span>
+                {{/each}}
+              </div>
+              <div
+                class="status-badge support-status-{{group.supportInfo.status}}"
+              >
+                {{#if (eq group.supportInfo.status "in-development")}}
+                  Active development
+                {{else if (eq group.supportInfo.status "active")}}
+                  Supported
+                {{else if (eq group.supportInfo.status "end-of-life")}}
+                  End of Life
+                {{else if (eq group.supportInfo.status "upcoming")}}
+                  Upcoming
+                {{/if}}
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="card-row">
+                <div class="card-label">
+                  {{#if (this.isPlannedDate group.headerVersion.date)}}
+                    Planned release
                   {{else}}
-                    <LinkTo
-                      @route="changelog"
-                      @model={{group.headerVersion.version}}
-                      class="version-link"
-                    >v{{group.minorVersion}}</LinkTo>
+                    First released
                   {{/if}}
-                  {{#each group.supportInfo.tags as |tag|}}
-                    <span class="version-tag">{{tag}}</span>
-                  {{/each}}
                 </div>
-                <div
-                  class="status-badge support-status-{{group.supportInfo.status}}"
-                >
+                <div class="card-value">
                   {{#if (eq group.supportInfo.status "in-development")}}
-                    Active development
-                  {{else if (eq group.supportInfo.status "active")}}
-                    Supported
-                  {{else if (eq group.supportInfo.status "end-of-life")}}
-                    End of Life
+                    <span class="upcoming-date">{{this.formatDate
+                        group.headerVersion.date
+                      }}</span>
                   {{else if (eq group.supportInfo.status "upcoming")}}
-                    Upcoming
+                    <span class="upcoming-date">{{this.formatDate
+                        group.headerVersion.date
+                      }}</span>
+                  {{else}}
+                    <span class="relative-date">
+                      {{this.getRelativeTime group.headerVersion.date}}
+                      <span class="date-badge">{{this.formatDate
+                          group.headerVersion.date
+                        }}</span>
+                    </span>
                   {{/if}}
                 </div>
               </div>
 
-              <div class="card-body">
-                <div class="card-row">
-                  <div class="card-label">
-                    {{#if (this.isPlannedDate group.headerVersion.date)}}
-                      Planned release
-                    {{else}}
-                      First released
+              <div class="card-row">
+                <div class="card-label">
+                  {{#if (this.isPlannedDate group.supportInfo.supportEndDate)}}
+                    Planned end of life
+                  {{else}}
+                    End of Life
+                  {{/if}}
+                </div>
+                <div class="card-value">
+                  {{#if group.supportInfo.supportEndDate}}
+                    {{this.formatDate group.supportInfo.supportEndDate}}
+                    {{#if group.supportInfo.isESR}}
+                      <span class="esr-note">(ESR)</span>
                     {{/if}}
-                  </div>
-                  <div class="card-value">
-                    {{#if (eq group.supportInfo.status "in-development")}}
-                      <span class="upcoming-date">{{this.formatDate
-                          group.headerVersion.date
-                        }}</span>
-                    {{else if (eq group.supportInfo.status "upcoming")}}
-                      <span class="upcoming-date">{{this.formatDate
-                          group.headerVersion.date
-                        }}</span>
-                    {{else}}
+                  {{else}}
+                    <span class="muted-text">—</span>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+
+            {{#unless (eq group.supportInfo.status "upcoming")}}
+              {{#unless (eq group.supportInfo.status "in-development")}}
+                <div class="patch-versions">
+                  {{#each group.versions as |v|}}
+                    <div class="patch-version-row">
+                      <LinkTo
+                        @route="changelog"
+                        @model={{v.version}}
+                        class="patch-version-link"
+                      >{{v.version}}</LinkTo>
                       <span class="relative-date">
-                        {{this.getRelativeTime group.headerVersion.date}}
+                        {{this.getRelativeTime v.date}}
                         <span class="date-badge">{{this.formatDate
-                            group.headerVersion.date
+                            v.date
                           }}</span>
                       </span>
-                    {{/if}}
-                  </div>
+                    </div>
+                  {{/each}}
                 </div>
-
-                <div class="card-row">
-                  <div class="card-label">
-                    {{#if
-                      (this.isPlannedDate group.supportInfo.supportEndDate)
-                    }}
-                      Planned end of life
-                    {{else}}
-                      End of Life
-                    {{/if}}
-                  </div>
-                  <div class="card-value">
-                    {{#if group.supportInfo.supportEndDate}}
-                      {{this.formatDate group.supportInfo.supportEndDate}}
-                      {{#if group.supportInfo.isESR}}
-                        <span class="esr-note">(ESR)</span>
-                      {{/if}}
-                    {{else}}
-                      <span class="muted-text">—</span>
-                    {{/if}}
-                  </div>
-                </div>
-              </div>
-
-              {{#unless (eq group.supportInfo.status "upcoming")}}
-                {{#unless (eq group.supportInfo.status "in-development")}}
-                  <div class="patch-versions">
-                    {{#each group.versions as |v|}}
-                      <div class="patch-version-row">
-                        <LinkTo
-                          @route="changelog"
-                          @model={{v.version}}
-                          class="patch-version-link"
-                        >{{v.version}}</LinkTo>
-                        <span class="relative-date">
-                          {{this.getRelativeTime v.date}}
-                          <span class="date-badge">{{this.formatDate
-                              v.date
-                            }}</span>
-                        </span>
-                      </div>
-                    {{/each}}
-                  </div>
-                {{/unless}}
               {{/unless}}
-            </div>
-          {{/each}}
-        </div>
-      {{/if}}
+            {{/unless}}
+          </div>
+        {{/each}}
+      </div>
     </div>
   </template>
 }

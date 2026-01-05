@@ -223,10 +223,6 @@ export default class CommitViewer extends Component {
           </div>
         {{/if}}
 
-        {{#if data.isLoading}}
-          <div class="loading">Loading commit data...</div>
-        {{/if}}
-
         {{#if this.commits.length}}
           <VerticalCollection
             @items={{this.commits}}

@@ -8,7 +8,6 @@ export class ChangelogData {
   @tracked commitData = CommitsData;
   @tracked newFeatures = NewFeaturesData;
   @tracked securityAdvisories = SecurityAdvisoriesData;
-  @tracked isLoading = false;
 
   get baseTag() {
     return this.commitData?.baseTag || "";
