@@ -24,7 +24,9 @@ function rerenderHighlights(id) {
 
 function addHighlightRanges(id, ranges) {
   const highlightSet = getOrCreateHighlightSet(id);
-  highlightSet.add(...ranges.values());
+  for (const range of ranges) {
+    highlightSet.add(range);
+  }
   rerenderHighlights(id);
 }
 
