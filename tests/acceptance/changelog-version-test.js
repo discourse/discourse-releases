@@ -6,7 +6,7 @@ module("Acceptance | changelog version", function (hooks) {
   setupApplicationTest(hooks);
 
   hooks.beforeEach(async function () {
-    await visit("/changelog/v2025.11.0");
+    await visit("/changelog/v2025.12.0");
   });
 
   test("displays commit viewer", async function (assert) {
@@ -73,7 +73,7 @@ module("Acceptance | changelog version", function (hooks) {
     assert.true(tabs.length > 1);
 
     // Count all commits initially (excluding feature cards)
-    const allCount = findAll(".commit-card:not(.feature-card)").length;
+    const allCount = findAll(".commit-card").length;
     assert.true(allCount > 0, "Should have commits displayed");
 
     // Click a filter tab (not "All")
@@ -81,7 +81,7 @@ module("Acceptance | changelog version", function (hooks) {
     assert.dom(tabs[1]).hasClass("active");
 
     // Count filtered commits
-    const filteredCount = findAll(".commit-card:not(.feature-card)").length;
+    const filteredCount = findAll(".commit-card").length;
     assert.true(filteredCount > 0, "Should have some commits after filtering");
     assert.true(
       filteredCount <= allCount,
@@ -92,8 +92,11 @@ module("Acceptance | changelog version", function (hooks) {
     await click(tabs[0]);
     assert.dom(tabs[0]).hasClass("active");
 
+    // Workaround flakiness. Seems that vertical-collection isn't setting up test waiters properly?
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
     // Verify we have the same count as before
-    const backToAllCount = findAll(".commit-card:not(.feature-card)").length;
+    const backToAllCount = findAll(".commit-card").length;
     assert.strictEqual(
       backToAllCount,
       allCount,
@@ -158,12 +161,12 @@ module("Acceptance | changelog version", function (hooks) {
     await click(".toggle-selector-btn");
 
     // Change start ref to a specific version
-    await fillIn("#start-ref", "v3.4.1");
+    await fillIn("#start-ref", "v2025.11.0");
 
     // Should navigate to /changelog/custom with query params
     assert.true(currentURL().startsWith("/changelog/custom?"));
-    assert.true(currentURL().includes("start=v3.4.1"));
-    assert.dom(".changelog-range").hasText(/v3\.4\.1/);
+    assert.true(currentURL().includes("start=v2025.11.0"));
+    assert.dom(".changelog-range").hasText(/v2025\.11\.0/);
   });
 
   test("entering commit hash in advanced mode navigates correctly", async function (assert) {
