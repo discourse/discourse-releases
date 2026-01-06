@@ -1,9 +1,5 @@
 .feature-card {
-  background: linear-gradient(
-    135deg,
-    light-dark(#667eea, #4a5fc1) 0%,
-    light-dark(#764ba2, #5d3a82) 100%
-  );
+  background: var(--color-feature);
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
@@ -15,7 +11,7 @@
 }
 
 .feature-card:hover {
-  box-shadow: 0 4px 12px light-dark(rgb(0 0 0 / 20%), rgb(0 0 0 / 40%));
+  box-shadow: var(--shadow-hover);
 }
 
 .feature-content {
