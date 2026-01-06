@@ -89,11 +89,8 @@
     "@eslint/compat": "^2.0.0",
     "@glint/ember-tsc": "^1.0.8",
     "@html-next/vertical-collection": "^4.0.2",
-    "@isomorphic-git/lightning-fs": "^4.6.2",
     "execa": "^9.6.1",
-    "isomorphic-git": "^1.36.1",
     "jsdom": "^27.4.0",
-    "semver": "^7.7.3",
-    "simple-dom": "^1.4.0"
+    "semver": "^7.7.3"
   }
 }
