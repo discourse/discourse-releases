@@ -86,7 +86,6 @@ export class ChangelogData {
   }
 
   get provisionalVersions() {
-
     return Object.keys(this.commitData.provisionalVersions).map((version) => ({
       value: version,
       label: version,
