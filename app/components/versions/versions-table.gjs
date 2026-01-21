@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import "./versions-table.css";
-import VersionSupport from "/data/version-support.json";
+import VersionsData from "/data/version-support.json";
 import semver from "semver";
 import eq from "../../helpers/eq.js";
 import { ChangelogData } from "../../lib/git-utils.js";
@@ -53,29 +53,86 @@ export default class VersionsTable extends Component {
   get groupedVersions() {
     const groups = [];
 
-    // Use version-support.json as the source of truth
-    VersionSupport.forEach((supportEntry) => {
-      const parsed = semver.coerce(supportEntry.version);
+    // These two older stable versions are not part of core's versions.json
+    // But we want to show them on the releases site for now.
+    const versionsWithExtras = {
+      ...VersionsData,
+      "3.5": {
+        releaseDate: "2025-08-19",
+        developmentStartDate: "2025-08-19",
+        supportEndDate: "2026-01",
+        esr: true,
+        supported: true,
+        released: true,
+      },
+      "3.4": {
+        releaseDate: "2025-02-04",
+        developmentStartDate: "2025-01-04",
+        supportEndDate: "2025-08-19",
+        esr: true,
+        supported: false,
+        released: true,
+      },
+    };
+    const versions = Object.entries(versionsWithExtras);
+
+    // Find the first released version index (for "release" tag)
+    const firstReleasedIndex = versions.findIndex(([, data]) => data.released);
+
+    // Find the first active ESR version index (for "ESR" tag)
+    const firstActiveEsrIndex = versions.findIndex(
+      ([, data]) => data.esr && data.released && data.supported
+    );
+
+    versions.forEach(([version, data], index) => {
+      const parsed = semver.coerce(version);
 
       if (!parsed) {
         return;
       }
 
+      // Compute status from released/supported flags
+      let status;
+      if (!data.released && data.supported) {
+        status = "in-development";
+      } else if (data.released && data.supported) {
+        status = "active";
+      } else if (data.released && !data.supported) {
+        status = "end-of-life";
+      } else {
+        status = "upcoming";
+      }
+
+      // Compute tags
+      const tags = [];
+      if (status === "in-development") {
+        tags.push("latest");
+      } else if (status === "active" && index === firstReleasedIndex) {
+        tags.push("release");
+      }
+      if (index === firstActiveEsrIndex) {
+        tags.push("ESR");
+      }
+
+      const supportInfo = {
+        ...data,
+        version,
+        status,
+        tags,
+      };
+
       const group = {
-        minorVersion: supportEntry.version,
-        supportInfo: supportEntry,
+        minorVersion: version,
+        supportInfo,
         versions: [],
         latestSemver: parsed,
       };
 
       // If this is an upcoming or in-development version, just add the placeholder
-      if (
-        supportEntry.status === "upcoming" ||
-        supportEntry.status === "in-development"
-      ) {
+      if (status === "upcoming" || status === "in-development") {
         group.versions.push({
-          version: supportEntry.version,
-          date: supportEntry.releaseDate,
+          version,
+          date: data.releaseDate,
           hash: null,
           parsed,
           isUpcoming: true,
@@ -119,11 +176,11 @@ export default class VersionsTable extends Component {
         });
         group.headerVersion = dotZeroVersion || group.versions[0];
 
-        // Override with the release date from version-support.json for consistency
-        if (group.headerVersion && supportEntry.releaseDate) {
+        // Override with the release date from versions data for consistency
+        if (group.headerVersion && data.releaseDate) {
           group.headerVersion = {
             ...group.headerVersion,
-            date: supportEntry.releaseDate,
+            date: data.releaseDate,
           };
         }
       }
@@ -324,7 +381,7 @@ export default class VersionsTable extends Component {
                 <div class="card-value">
                   {{#if group.supportInfo.supportEndDate}}
                     {{this.formatDate group.supportInfo.supportEndDate}}
-                    {{#if group.supportInfo.isESR}}
+                    {{#if group.supportInfo.esr}}
                       <span class="esr-note">(ESR)</span>
                     {{/if}}
                   {{else}}

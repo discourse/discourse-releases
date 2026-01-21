@@ -8,6 +8,7 @@
 /data/commits.json
 /data/new-features.json
 /data/security-advisories.json
+/data/version-support.json
 
 # dependencies
 /node_modules/
