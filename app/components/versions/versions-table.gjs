@@ -60,9 +60,9 @@ export default class VersionsTable extends Component {
       "3.5": {
         releaseDate: "2025-08-19",
         developmentStartDate: "2025-08-19",
-        supportEndDate: "2026-01",
+        supportEndDate: "2026-01-28",
         esr: true,
-        supported: true,
+        supported: false,
         released: true,
       },
       "3.4": {
