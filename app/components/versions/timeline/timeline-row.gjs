@@ -3,11 +3,11 @@ import { htmlSafe } from "@ember/template";
 
 export default class TimelineRow extends Component {
   get devWidth() {
-    return Math.max(0, this.args.supportStart - this.args.devStart);
+    return Math.max(0, Math.round(this.args.supportStart) - this.args.devStart);
   }
 
   get supportedWidth() {
-    return Math.max(0, this.args.eol - this.args.supportStart);
+    return Math.max(0, this.args.eol - Math.round(this.args.supportStart));
   }
 
   get hasPhases() {
@@ -22,7 +22,7 @@ export default class TimelineRow extends Component {
 
   get supportedStyle() {
     return htmlSafe(
-      `left: ${this.args.supportStart}%; width: ${this.supportedWidth}%; background-color: var(--color-supported)`
+      `left: ${Math.round(this.args.supportStart)}%; width: ${this.supportedWidth}%; background-color: var(--color-supported)`
     );
   }
 

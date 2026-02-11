@@ -334,7 +334,7 @@ export default class VersionsTable extends Component {
                 {{else if (eq group.supportInfo.status "active")}}
                   Supported
                 {{else if (eq group.supportInfo.status "end-of-life")}}
-                  End of Life
+                  End of life
                 {{else if (eq group.supportInfo.status "upcoming")}}
                   Upcoming
                 {{/if}}
