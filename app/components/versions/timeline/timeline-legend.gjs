@@ -4,7 +4,7 @@ const TimelineLegend = <template>
       <div
         class="timeline-legend-color timeline-legend-color-development"
       ></div>
-      <span class="timeline-legend-label">Active Development</span>
+      <span class="timeline-legend-label">Active development</span>
     </div>
     <div class="timeline-legend-item">
       <div class="timeline-legend-color timeline-legend-color-supported"></div>
