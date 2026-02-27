@@ -43,11 +43,11 @@ export default class FeatureCard extends Component {
   }
 
   <template>
-    <div class="feature-card">
+    <div class="info-card feature-card">
       <div class="feature-content">
         <div class="feature-header">
           {{#if @feature.emoji}}
-            <span class="feature-emoji">{{@feature.emoji}}</span>
+            <span class="info-card-emoji">{{@feature.emoji}}</span>
           {{/if}}
           <h3 class="feature-title">{{@feature.title}}</h3>
         </div>
@@ -70,7 +70,7 @@ export default class FeatureCard extends Component {
               href={{@feature.link}}
               target="_blank"
               rel="noopener noreferrer"
-              class="feature-link"
+              class="info-card-link"
             >
               Learn more →
             </a>
