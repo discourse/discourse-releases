@@ -198,4 +198,20 @@ module("Acceptance | changelog version", function (hooks) {
       .dom(".security-advisory-card")
       .hasAttribute("href", /github\.com.*security.*advisories/);
   });
+
+  test("translator card is displayed for .0 releases", async function (assert) {
+    await visit("/changelog/v2025.12.0");
+
+    assert.dom(".translator-card").exists();
+    assert
+      .dom(".translator-card .info-card-link")
+      .hasAttribute("href", "https://translations.discourse.org/thank-you/v2025.12.0");
+    assert.dom(".translator-card p").hasText(/volunteer translators/);
+  });
+
+  test("translator card is not displayed for patch releases", async function (assert) {
+    await visit("/changelog/v2025.12.1");
+
+    assert.dom(".translator-card").doesNotExist();
+  });
 });

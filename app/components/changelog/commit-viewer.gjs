@@ -18,6 +18,7 @@ import CommitFilter from "./commit-filter";
 import FeatureCard from "./feature-card";
 import RangeSelector from "./range-selector";
 import SecurityAdvisoryCard from "./security-advisory-card";
+import TranslatorCard from "./translator-card";
 
 const data = new ChangelogData();
 
@@ -182,6 +183,15 @@ export default class CommitViewer extends Component {
     return this.endHash.trim() || data.defaultEndRef;
   }
 
+  // Show translator card only on main changelog pages for .0 releases
+  get showTranslatorCard() {
+    if (this.startHash || !this.args.end) {
+      return false;
+    }
+    // Only show for .0 releases (e.g., v2026.1.0 or v2026.1, not v2026.1.1)
+    return /^v\d+\.\d+(\.0)?$/.test(this.args.end);
+  }
+
   get bufferSize() {
     // In test mode, render all commits to avoid flaky tests
     return config.environment === "test" ? 9999 : 5;
@@ -223,6 +233,15 @@ export default class CommitViewer extends Component {
               <FeatureCard @feature={{feature}} />
             {{/each}}
           </div>
+        </div>
+      {{/if}}
+
+      {{#if this.showTranslatorCard}}
+        <div class="section">
+          <div class="section-header">
+            <h2>Translations</h2>
+          </div>
+          <TranslatorCard @version={{@end}} />
         </div>
       {{/if}}
 
