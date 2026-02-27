@@ -205,7 +205,10 @@ module("Acceptance | changelog version", function (hooks) {
     assert.dom(".translator-card").exists();
     assert
       .dom(".translator-card .info-card-link")
-      .hasAttribute("href", "https://translations.discourse.org/thank-you/v2025.12.0");
+      .hasAttribute(
+        "href",
+        "https://translations.discourse.org/thank-you/v2025.12.0"
+      );
     assert.dom(".translator-card p").hasText(/volunteer translators/);
   });
 

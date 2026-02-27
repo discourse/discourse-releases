@@ -10,8 +10,8 @@ export default class TranslatorCard extends Component {
     <div class="info-card translator-card">
       <span class="info-card-emoji">🌍</span>
       <p>
-        Thanks to our volunteer translators for their contributions to
-        this release!
+        Thanks to our volunteer translators for their contributions to this
+        release!
       </p>
       <a
         href={{this.thankYouUrl}}
