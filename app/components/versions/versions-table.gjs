@@ -257,19 +257,6 @@ export default class VersionsTable extends Component {
 
   <template>
     <div class="versions-container">
-
-      <div class="feedback-banner">
-        <span class="feedback-icon">✨</span>
-        <span>
-          This site is new! Let us know what you think
-          <a
-            href="https://meta.discourse.org/t/392712"
-            target="_blank"
-            rel="noopener"
-          >on Meta</a>.
-        </span>
-      </div>
-
       <div class="version-info">
         <p>
           This site provides information about Discourse versions, their release
