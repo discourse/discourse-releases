@@ -125,16 +125,16 @@ export class ChangelogData {
       return null;
     }
 
-    // Get all parent commits (excluding the ref itself)
+    // Get all parent commits (including the ref itself)
     const parentCommits = this.traverseParents(commitHash);
-    parentCommits.delete(commitHash);
 
     if (parentCommits.size === 0) {
       return null;
     }
 
-    // Only consider tags from sortedTags (which excludes filtered tags like -latest)
+    // Only consider tags from sortedTags
     const validTagValues = this.sortedTags.map((t) => t.value);
+    validTagValues.splice(validTagValues.indexOf(ref), 1); // Exclude the current ref if it's a tag
 
     // Find all valid tags that point to parent commits
     const matchingTags = [];
