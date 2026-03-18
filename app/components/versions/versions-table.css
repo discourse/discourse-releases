@@ -226,3 +226,8 @@
   border-radius: 3px;
   font-weight: normal;
 }
+
+.version-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}

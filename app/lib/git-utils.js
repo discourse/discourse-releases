@@ -133,8 +133,10 @@ export class ChangelogData {
     }
 
     // Only consider tags from sortedTags
-    const validTagValues = this.sortedTags.map((t) => t.value);
-    validTagValues.splice(validTagValues.indexOf(ref), 1); // Exclude the current ref if it's a tag
+    let validTagValues = this.sortedTags.map((t) => t.value);
+    validTagValues = validTagValues.filter(
+      (tag) => !tag.match(/-latest\.\d+$/) && tag !== ref
+    );
 
     // Find all valid tags that point to parent commits
     const matchingTags = [];
