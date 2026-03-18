@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import "./versions-table.css";
 import VersionsData from "/data/version-support.json";
@@ -24,11 +23,6 @@ export default class VersionsTable extends Component {
     for (const [tagName, tagHash] of Object.entries(
       this.data.commitData.refs.tags
     )) {
-      // Skip tags ending with -latest
-      if (tagName.endsWith("-latest")) {
-        continue;
-      }
-
       // Skip beta versions
       if (tagName.includes("beta")) {
         continue;
@@ -100,7 +94,8 @@ export default class VersionsTable extends Component {
       } else if (data.released && !data.supported) {
         status = "end-of-life";
       } else {
-        status = "upcoming";
+        // Skip versions that are not released and not supported
+        return;
       }
 
       // Compute tags
@@ -128,62 +123,37 @@ export default class VersionsTable extends Component {
         latestSemver: parsed,
       };
 
-      // If this is an upcoming or in-development version, just add the placeholder
-      if (status === "upcoming" || status === "in-development") {
-        group.versions.push({
-          version,
-          date: data.releaseDate,
-          hash: null,
-          parsed,
-          isUpcoming: true,
-        });
-        group.headerVersion = group.versions[0];
-      } else {
-        // For released versions, find all matching patch versions from git
-        const gitVersions = this.versions;
-        const matchingVersions = gitVersions.filter((v) => {
-          const vParsed = semver.coerce(v.version);
-          if (!vParsed) {
-            return false;
-          }
-          // Match major.minor
-          return (
-            vParsed.major === parsed.major && vParsed.minor === parsed.minor
-          );
-        });
-
-        // Add all matching versions
-        matchingVersions.forEach((v) => {
-          const vParsed = semver.coerce(v.version);
-          group.versions.push({
-            ...v,
-            parsed: vParsed,
-          });
-
-          // Track latest
-          if (semver.gt(vParsed, group.latestSemver)) {
-            group.latestSemver = vParsed;
-          }
-        });
-
-        // Sort versions by semver descending
-        group.versions.sort((a, b) => semver.rcompare(a.parsed, b.parsed));
-
-        // Find the .0 version for the group header
-        const dotZeroVersion = group.versions.find((v) => {
-          const match = v.version.match(/^v?\d+\.\d+\.0$/);
-          return match;
-        });
-        group.headerVersion = dotZeroVersion || group.versions[0];
-
-        // Override with the release date from versions data for consistency
-        if (group.headerVersion && data.releaseDate) {
-          group.headerVersion = {
-            ...group.headerVersion,
-            date: data.releaseDate,
-          };
+      // Find all matching git versions for this minor
+      const gitVersions = this.versions;
+      const matchingVersions = gitVersions.filter((v) => {
+        const vParsed = semver.coerce(v.version);
+        if (!vParsed) {
+          return false;
         }
-      }
+        return vParsed.major === parsed.major && vParsed.minor === parsed.minor;
+      });
+
+      // Add matching versions
+      matchingVersions.forEach((v) => {
+        const vParsed = semver.coerce(v.version);
+        group.versions.push({
+          ...v,
+          parsed: vParsed,
+        });
+
+        if (semver.gt(vParsed, group.latestSemver)) {
+          group.latestSemver = vParsed;
+        }
+      });
+
+      // Sort versions by semver descending
+      group.versions.sort((a, b) => semver.rcompare(a.parsed, b.parsed));
+
+      // Set header version - always use the release date from versions data
+      group.headerVersion = {
+        version: `v${version}.0`,
+        date: data.releaseDate,
+      };
 
       groups.push(group);
     });
@@ -214,31 +184,6 @@ export default class VersionsTable extends Component {
     });
   }
 
-  getRelativeTime(isoString) {
-    const date = new Date(isoString);
-    const now = new Date();
-    const diffInMs = now - date;
-    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
-    if (diffInDays === 0) {
-      return "today";
-    } else if (diffInDays === 1) {
-      return "1 day ago";
-    } else if (diffInDays < 30) {
-      return `${diffInDays} days ago`;
-    } else if (diffInDays < 60) {
-      return "1 month ago";
-    } else if (diffInDays < 365) {
-      const months = Math.floor(diffInDays / 30);
-      return `${months} months ago`;
-    } else if (diffInDays < 730) {
-      return "1 year ago";
-    } else {
-      const years = Math.floor(diffInDays / 365);
-      return `${years} years ago`;
-    }
-  }
-
   isPlannedDate(isoString) {
     if (!isoString) {
       return false;
@@ -253,6 +198,13 @@ export default class VersionsTable extends Component {
     const date = new Date(isoString);
     const now = new Date();
     return date > now;
+  }
+
+  getVersionDateLabel(version) {
+    if (version.includes("-latest")) {
+      return "started";
+    }
+    return "released";
   }
 
   <template>
@@ -284,7 +236,6 @@ export default class VersionsTable extends Component {
           <div
             id="version-{{group.minorVersion}}"
             class="version-card
-              {{if (eq group.supportInfo.status 'upcoming') 'upcoming-version'}}
               {{if
                 (eq group.supportInfo.status 'in-development')
                 'in-development-version'
@@ -294,21 +245,11 @@ export default class VersionsTable extends Component {
           >
             <div class="card-header">
               <div class="version-title">
-                {{#if (eq group.supportInfo.status "in-development")}}
-                  <LinkTo
-                    @route="changelog"
-                    @model={{concat "v" group.minorVersion ".0"}}
-                    class="version-link"
-                  >v{{group.minorVersion}}</LinkTo>
-                {{else if (eq group.supportInfo.status "upcoming")}}
-                  <span class="version-name">v{{group.minorVersion}}</span>
-                {{else}}
-                  <LinkTo
-                    @route="changelog"
-                    @model={{group.headerVersion.version}}
-                    class="version-link"
-                  >v{{group.minorVersion}}</LinkTo>
-                {{/if}}
+                <LinkTo
+                  @route="changelog"
+                  @model={{group.headerVersion.version}}
+                  class="version-link"
+                >v{{group.minorVersion}}</LinkTo>
                 {{#each group.supportInfo.tags as |tag|}}
                   <span class="version-tag">{{tag}}</span>
                 {{/each}}
@@ -322,8 +263,6 @@ export default class VersionsTable extends Component {
                   Supported
                 {{else if (eq group.supportInfo.status "end-of-life")}}
                   End of life
-                {{else if (eq group.supportInfo.status "upcoming")}}
-                  Upcoming
                 {{/if}}
               </div>
             </div>
@@ -338,22 +277,7 @@ export default class VersionsTable extends Component {
                   {{/if}}
                 </div>
                 <div class="card-value">
-                  {{#if (eq group.supportInfo.status "in-development")}}
-                    <span class="upcoming-date">{{this.formatDate
-                        group.headerVersion.date
-                      }}</span>
-                  {{else if (eq group.supportInfo.status "upcoming")}}
-                    <span class="upcoming-date">{{this.formatDate
-                        group.headerVersion.date
-                      }}</span>
-                  {{else}}
-                    <span class="relative-date">
-                      {{this.getRelativeTime group.headerVersion.date}}
-                      <span class="date-badge">{{this.formatDate
-                          group.headerVersion.date
-                        }}</span>
-                    </span>
-                  {{/if}}
+                  {{this.formatDate group.headerVersion.date}}
                 </div>
               </div>
 
@@ -378,27 +302,23 @@ export default class VersionsTable extends Component {
               </div>
             </div>
 
-            {{#unless (eq group.supportInfo.status "upcoming")}}
-              {{#unless (eq group.supportInfo.status "in-development")}}
-                <div class="patch-versions">
-                  {{#each group.versions as |v|}}
-                    <div class="patch-version-row">
-                      <LinkTo
-                        @route="changelog"
-                        @model={{v.version}}
-                        class="patch-version-link"
-                      >{{v.version}}</LinkTo>
-                      <span class="relative-date">
-                        {{this.getRelativeTime v.date}}
-                        <span class="date-badge">{{this.formatDate
-                            v.date
-                          }}</span>
-                      </span>
-                    </div>
-                  {{/each}}
-                </div>
-              {{/unless}}
-            {{/unless}}
+            {{#if group.versions.length}}
+              <div class="patch-versions">
+                {{#each group.versions as |v|}}
+                  <div class="patch-version-row">
+                    <LinkTo
+                      @route="changelog"
+                      @model={{v.version}}
+                      class="patch-version-link"
+                    >{{v.version}}</LinkTo>
+                    <span class="version-date">
+                      {{this.getVersionDateLabel v.version}}
+                      {{this.formatDate v.date}}
+                    </span>
+                  </div>
+                {{/each}}
+              </div>
+            {{/if}}
           </div>
         {{/each}}
       </div>
