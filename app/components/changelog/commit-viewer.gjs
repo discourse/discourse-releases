@@ -17,7 +17,7 @@ import CommitCard from "./commit-card";
 import CommitFilter from "./commit-filter";
 import FeatureCard from "./feature-card";
 import RangeSelector from "./range-selector";
-import SecurityAdvisoryCard from "./security-advisory-card";
+import SecurityFixesSummary from "./security-fixes-summary";
 import TranslatorCard from "./translator-card";
 
 const data = new ChangelogData();
@@ -250,11 +250,7 @@ export default class CommitViewer extends Component {
           <div class="section-header">
             <h2>Security Fixes</h2>
           </div>
-          <div class="advisories-section">
-            {{#each this.matchingAdvisories as |advisory|}}
-              <SecurityAdvisoryCard @advisory={{advisory}} />
-            {{/each}}
-          </div>
+          <SecurityFixesSummary @advisories={{this.matchingAdvisories}} />
         </div>
       {{/if}}
 
