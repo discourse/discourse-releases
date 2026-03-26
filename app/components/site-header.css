@@ -1,9 +1,6 @@
 .site-header {
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
   padding: 1rem 0;
   margin-bottom: 2rem;
-  box-shadow: var(--shadow-sm);
 }
 
 .header-content {
@@ -43,7 +40,6 @@
 .logo {
   height: 32px;
   width: auto;
-  fill: currentcolor;
   flex-shrink: 0;
 }
 

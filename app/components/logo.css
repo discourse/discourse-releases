@@ -1,0 +1,11 @@
+.logo {
+  --logo-fill: #000;
+  --logo-fill-inverse: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo {
+    --logo-fill: #fff;
+    --logo-fill-inverse: #000;
+  }
+}

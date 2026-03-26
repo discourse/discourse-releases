@@ -7,8 +7,7 @@ export default <template>
       <div class="header-left">
         <h1 class="site-title">
           <a href="/" class="title-link">
-            <Logo class="logo" />
-            <span>Discourse Releases</span>
+            <Logo />
           </a>
         </h1>
       </div>

@@ -7,13 +7,15 @@
   --color-esr: #9b59b6;
   --color-end-of-life: #5d6d6e;
   --color-today: #e74c3c;
+  --color-brand-primary: #7b5fe2;
+  --color-brand-primary-2: #8b6df8;
 
   /* UI colors */
   --color-notice: #9b59b6;
   --color-feature: #667eea;
 
   /* Light mode colors */
-  --bg-page: #f5f5f5;
+  --bg-page: #f9f8fc;
   --bg-card: white;
   --bg-card-hover: white;
   --bg-subtle: #f8f9fa;
@@ -21,18 +23,19 @@
   --text-primary: #333;
   --text-secondary: #666;
   --text-muted: #7f8c8d;
-  --text-link: #06c;
-  --text-link-hover: #0052a3;
+  --text-link: var(--color-brand-primary);
+  --text-link-hover: var(--color-brand-primary-2);
   --border-color: #e1e8ed;
   --border-subtle: #f0f0f0;
   --shadow-sm: 0 2px 4px rgb(0 0 0 / 10%);
   --shadow-md: 0 4px 12px rgb(0 0 0 / 15%);
   --shadow-hover: 0 2px 6px rgb(0 0 0 / 12%);
+  --bg-gradient-start: #e1d5ff;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-page: #1a1a1a;
+    --bg-page: #000;
     --bg-card: #2d2d2d;
     --bg-card-hover: #363636;
     --bg-subtle: #242424;
@@ -40,13 +43,14 @@
     --text-primary: #e0e0e0;
     --text-secondary: #b0b0b0;
     --text-muted: #888;
-    --text-link: #5dade2;
-    --text-link-hover: #85c1e9;
+    --text-link: var(--color-brand-primary);
+    --text-link-hover: var(--color-brand-primary-2);
     --border-color: #404040;
     --border-subtle: #333;
     --shadow-sm: 0 2px 4px rgb(0 0 0 / 30%);
     --shadow-md: 0 4px 12px rgb(0 0 0 / 40%);
     --shadow-hover: 0 2px 6px rgb(0 0 0 / 35%);
+    --bg-gradient-start: #3a275d;
   }
 }
 
@@ -59,6 +63,26 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--bg-page);
+}
+
+.app-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 450px;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--bg-gradient-start) 0%,
+    var(--bg-page) 100%
+  );
+}
+
+.app-layout {
+  position: relative;
+  z-index: 1;
 }
 
 .commit-viewer {
