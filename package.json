@@ -91,6 +91,7 @@
     "@html-next/vertical-collection": "^4.0.2",
     "execa": "^9.6.1",
     "jsdom": "^27.4.0",
+    "lucide": "^1.7.0",
     "semver": "^7.7.3"
   }
 }

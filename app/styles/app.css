@@ -86,7 +86,7 @@ body {
 }
 
 .commit-viewer {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 1rem 2rem;
   position: relative;
