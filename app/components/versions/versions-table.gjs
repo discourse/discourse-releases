@@ -322,6 +322,8 @@ export default class VersionsTable extends Component {
           </div>
         {{/each}}
       </div>
+
+      <a href="/feed.xml" class="feed-link">RSS Feed</a>
     </div>
   </template>
 }
