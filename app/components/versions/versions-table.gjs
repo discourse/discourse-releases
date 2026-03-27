@@ -246,7 +246,10 @@ export default class VersionsTable extends Component {
         </article>
         <article class="version-info-tile">
           <h3 class="version-info-tile-title">
-            <LucideIcon @icon={{Calendar}} @iconClass="version-info-tile-icon" />
+            <LucideIcon
+              @icon={{Calendar}}
+              @iconClass="version-info-tile-icon"
+            />
             Monthly releases
           </h3>
           <p>
@@ -256,7 +259,10 @@ export default class VersionsTable extends Component {
         </article>
         <article class="version-info-tile">
           <h3 class="version-info-tile-title">
-            <LucideIcon @icon={{ShieldCheck}} @iconClass="version-info-tile-icon" />
+            <LucideIcon
+              @icon={{ShieldCheck}}
+              @iconClass="version-info-tile-icon"
+            />
             Extended Support Release (ESR)
           </h3>
           <p>
