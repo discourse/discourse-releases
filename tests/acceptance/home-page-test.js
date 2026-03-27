@@ -11,7 +11,7 @@ module("Acceptance | home page", function (hooks) {
 
   test("displays versions table", async function (assert) {
     assert.dom(".versions-container").exists();
-    assert.dom(".version-info").exists();
+    assert.dom(".version-info-tiles").exists();
     assert.dom(".version-card").exists();
   });
 

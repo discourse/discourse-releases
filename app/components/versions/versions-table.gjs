@@ -209,24 +209,45 @@ export default class VersionsTable extends Component {
 
   <template>
     <div class="versions-container">
-      <div class="version-info">
-        <p>
-          This site provides information about Discourse versions, their release
-          dates, support timelines, and changelogs.
+      <div class="versions-page-lead">
+        <h1 class="versions-page-headline">Discourse Releases</h1>
+        <p class="versions-intro">
+          Browse release dates, support timelines, and changelogs for every
+          stable version.
         </p>
-        <p>
-          Most Discourse installations track the
-          <strong>latest</strong>
-          version, which receives continuous updates with new features, bug
-          fixes, and security patches.
-        </p>
-        <p>
-          Numbered releases are available for those who prefer less frequent
-          changes. Each monthly release receives security updates for
-          approximately two months. Every 6 months, an Extended Support Release
-          (ESR) is designated, which receives updates for approximately 8
-          months.
-        </p>
+      </div>
+
+      <div class="version-info-tiles">
+        <article class="version-info-tile">
+          <h3 class="version-info-tile-title">Latest version</h3>
+          <p>
+            Most Discourse installations track the
+            <strong>latest</strong>
+            version, which receives continuous updates with new features, bug
+            fixes, and security patches.
+          </p>
+        </article>
+        <article class="version-info-tile">
+          <h3 class="version-info-tile-title">Numbered releases</h3>
+          <p>
+            Numbered releases are available for those who prefer less frequent
+            changes.
+          </p>
+        </article>
+        <article class="version-info-tile">
+          <h3 class="version-info-tile-title">Monthly releases</h3>
+          <p>
+            Each monthly release receives security updates for approximately two
+            months.
+          </p>
+        </article>
+        <article class="version-info-tile">
+          <h3 class="version-info-tile-title">Extended Support Release (ESR)</h3>
+          <p>
+            Every 6 months, an ESR is designated, which receives updates for
+            approximately 8 months.
+          </p>
+        </article>
       </div>
 
       <VersionsTimeline @versions={{this.groupedVersions}} />
