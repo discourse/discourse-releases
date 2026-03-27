@@ -11,7 +11,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "vite build && BUILD_SSR=true vite build && node ./scripts/prerender.mjs",
+    "build": "vite build && BUILD_SSR=true vite build && node ./scripts/prerender.mjs && node ./scripts/generate-rss.mjs",
     "build:data": "concurrently 'node lib/write-commit-info.mjs' 'node lib/fetch-new-features.mjs' 'node lib/fetch-security-advisories.mjs'",
     "build:data:advisories": "node lib/fetch-security-advisories.mjs",
     "build:full": "pnpm build:data && pnpm build",
@@ -90,6 +90,7 @@
     "@glint/ember-tsc": "^1.0.8",
     "@html-next/vertical-collection": "^4.0.2",
     "execa": "^9.6.1",
+    "fast-xml-parser": "^5.5.9",
     "jsdom": "^27.4.0",
     "semver": "^7.7.3"
   }
