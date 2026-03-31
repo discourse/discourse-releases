@@ -24,7 +24,7 @@ export default <template>
           class="external-link"
           target="_blank"
           rel="noopener noreferrer"
-        >Meta ↗</a>
+        >Community ↗</a>
         <a
           href="https://github.com/discourse/discourse"
           class="external-link"

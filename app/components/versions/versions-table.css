@@ -5,7 +5,7 @@
 }
 
 .header {
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   text-align: left;
 }
 
@@ -15,14 +15,14 @@
 }
 
 .versions-page-lead {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
 .versions-page-headline {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
   font-size: 2.125rem;
-  font-weight: 700;
+  font-weight: 900;
   line-height: 1.2;
   color: var(--text-primary);
   letter-spacing: -0.02em;
@@ -38,7 +38,6 @@
   margin: 0 auto;
   line-height: 1.65;
   font-size: 1.1rem;
-  color: var(--text-secondary);
 }
 
 .version-info-tiles {
@@ -62,15 +61,11 @@
   }
 }
 
-.version-info-tile {
+.version-info-tiles-tile {
   margin: 0;
-  padding: 1rem 1.125rem;
-  background: var(--bg-card);
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
 }
 
-.version-info-tile-title {
+.version-info-tiles-title {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
@@ -81,7 +76,7 @@
   line-height: 1.3;
 }
 
-.version-info-tile-icon {
+.version-info-tiles-icon {
   flex-shrink: 0;
   margin-top: 0.1em;
   width: var(--version-info-tile-icon-size);
@@ -89,14 +84,14 @@
   color: var(--text-primary);
 }
 
-.version-info-tile p {
+.version-info-tiles-description {
   margin: 0;
   line-height: 1.55;
   font-size: 0.875rem;
   color: var(--text-secondary);
 }
 
-.version-info-tile p strong {
+.version-info-tiles-description strong {
   color: var(--text-primary);
   font-weight: 600;
 }
@@ -126,11 +121,6 @@
 
 .version-card:hover {
   box-shadow: var(--shadow-hover);
-}
-
-.version-card:target {
-  box-shadow: oklch(from var(--color-active-development) l c h / 30%) 0 4px 12px;
-  transform: scale(1.01);
 }
 
 .card-header {
@@ -232,10 +222,6 @@
 
 .version-card.eol-version .card-header {
   background: oklch(from var(--color-end-of-life) l c h / 20%);
-}
-
-.version-card.eol-version {
-  opacity: 0.8;
 }
 
 .version-card.active-version .card-header {

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import VerticalCollection from "@html-next/vertical-collection/components/vertical-collection/component";
+import { GitCommitHorizontal, Info } from "lucide";
 import config from "discourse-releases/config/environment";
 import {
   AmbiguousRefError,
@@ -13,6 +14,7 @@ import {
   sortCommitsByDate,
   UnknownRefError,
 } from "../../lib/git-utils.js";
+import LucideIcon from "../lucide-icon";
 import CommitCard from "./commit-card";
 import CommitFilter from "./commit-filter";
 import FeatureCard from "./feature-card";
@@ -107,15 +109,11 @@ export default class CommitViewer extends Component {
     return this.resolvedRefs.error;
   }
 
-  @cached
-  get error() {
-    if (this.refError) {
-      return this.refError;
+  get isEmptyCommits() {
+    if (!data.commitData || this.refError) {
+      return false;
     }
-    if (!data.commitData) {
-      return null;
-    }
-    return this.commits.length === 0 ? "No commits found" : null;
+    return this.commits.length === 0;
   }
 
   @cached
@@ -216,8 +214,15 @@ export default class CommitViewer extends Component {
           />
           {{#if this.provisionalInfo}}
             <p class="provisional-notice">
-              ℹ️ Provisional changelog for
-              <strong>{{@end}}</strong>, which has not yet been released
+              <LucideIcon
+                @icon={{Info}}
+                @size={{18}}
+                @iconClass="provisional-notice-icon"
+              />
+              <span>
+                Provisional changelog for
+                <strong>{{@end}}</strong>, which has not yet been released
+              </span>
             </p>
           {{/if}}
         </div>
@@ -273,9 +278,17 @@ export default class CommitViewer extends Component {
             @onFilterChange={{this.updateFilterText}}
           />
 
-          {{#if this.error}}
-            <div class="error">
-              {{this.error}}
+          {{#if this.isEmptyCommits}}
+            <div class="commits-empty-state" role="status">
+              <LucideIcon
+                @icon={{GitCommitHorizontal}}
+                @size={{48}}
+                @iconClass="commits-empty-state-icon"
+              />
+              <p class="commits-empty-state-text">No commits found</p>
+              <p class="commits-empty-state-hint">
+                Try adjusting the version range or filters.
+              </p>
             </div>
           {{/if}}
 

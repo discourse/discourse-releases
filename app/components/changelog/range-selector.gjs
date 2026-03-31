@@ -65,7 +65,7 @@ export default class RangeSelector extends Component {
           type="button"
           class="go-button"
           {{on "click" this.apply}}
-        >Go</button>
+        >Compare Releases</button>
       </div>
     {{/if}}
   </template>

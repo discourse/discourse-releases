@@ -222,50 +222,49 @@ export default class VersionsTable extends Component {
       <VersionsTimeline @versions={{this.groupedVersions}} />
 
       <div class="version-info-tiles">
-        <article class="version-info-tile">
-          <h3 class="version-info-tile-title">
-            <LucideIcon @icon={{Rocket}} @iconClass="version-info-tile-icon" />
+        <article class="version-info-tiles-tile">
+          <h3 class="version-info-tiles-title">
+            <LucideIcon @icon={{Rocket}} @iconClass="version-info-tiles-icon" />
             Latest version
           </h3>
-          <p>
-            Most Discourse installations track the
-            <strong>latest</strong>
-            version, which receives continuous updates with new features, bug
-            fixes, and security patches.
+          <p class="version-info-tiles-description">
+            Most Discourse installations track the latest version, which
+            receives continuous updates with new features, bug fixes, and
+            security&nbsp;patches.
           </p>
         </article>
-        <article class="version-info-tile">
-          <h3 class="version-info-tile-title">
-            <LucideIcon @icon={{Hash}} @iconClass="version-info-tile-icon" />
+        <article class="version-info-tiles-tile">
+          <h3 class="version-info-tiles-title">
+            <LucideIcon @icon={{Hash}} @iconClass="version-info-tiles-icon" />
             Numbered releases
           </h3>
-          <p>
-            Numbered releases are available for those who prefer less frequent
-            changes.
+          <p class="version-info-tiles-description">
+            Numbered releases are available for those who prefer less
+            frequent&nbsp;changes.
           </p>
         </article>
-        <article class="version-info-tile">
-          <h3 class="version-info-tile-title">
+        <article class="version-info-tiles-tile">
+          <h3 class="version-info-tiles-title">
             <LucideIcon
               @icon={{Calendar}}
-              @iconClass="version-info-tile-icon"
+              @iconClass="version-info-tiles-icon"
             />
             Monthly releases
           </h3>
-          <p>
+          <p class="version-info-tiles-description">
             Each monthly release receives security updates for approximately two
             months.
           </p>
         </article>
-        <article class="version-info-tile">
-          <h3 class="version-info-tile-title">
+        <article class="version-info-tiles-tile">
+          <h3 class="version-info-tiles-title">
             <LucideIcon
               @icon={{ShieldCheck}}
-              @iconClass="version-info-tile-icon"
+              @iconClass="version-info-tiles-icon"
             />
-            Extended Support Release (ESR)
+            Extended Support Release
           </h3>
-          <p>
+          <p class="version-info-tiles-description">
             Every 6 months, an ESR is designated, which receives updates for
             approximately 8 months.
           </p>

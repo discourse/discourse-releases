@@ -99,7 +99,6 @@ export default class RefSelector extends Component {
             {{/each}}
           </optgroup>
         </select>
-        <small class="input-help">Select a tag or branch</small>
       {{/if}}
     </div>
   </template>
