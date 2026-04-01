@@ -53,7 +53,7 @@ export default class SecurityFixesSummary extends Component {
                 target="_blank"
                 rel="noopener noreferrer"
                 class="advisory-link"
-              >details</a>
+              >Details</a>
             </li>
           {{/each}}
         </ul>

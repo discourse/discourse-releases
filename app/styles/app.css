@@ -41,6 +41,7 @@
   --text-muted: #7f8c8d;
   --text-link: var(--color-brand-primary);
   --text-link-hover: var(--color-brand-primary-2);
+  --text-outline-brand: var(--color-brand-primary);
   --border-color: rgb(0 0 0 / 10%);
   --border-subtle: #f0f0f0;
   --shadow-sm: 0 2px 4px rgb(0 0 0 / 10%);
@@ -52,16 +53,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --color-brand-primary: #7760DB;
+    --color-brand-primary-2: #b1a2f6;
+
     --bg-page: #000;
-    --bg-card: #2d2d2d;
+    --bg-card: #222222;
     --bg-card-hover: #363636;
     --bg-subtle: #242424;
     --bg-code: #242424;
-    --text-primary: #e0e0e0;
+    --text-primary: #dfdfdf;
     --text-secondary: #b0b0b0;
     --text-muted: #888;
     --text-link: var(--color-brand-primary);
     --text-link-hover: var(--color-brand-primary-2);
+    --text-outline-brand: var(--text-primary);
     --border-color: #404040;
     --border-subtle: #333;
     --shadow-sm: 0 2px 4px rgb(0 0 0 / 30%);
@@ -92,7 +97,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 550px;
+  height: 750px;
   z-index: 0;
   pointer-events: none;
   background: linear-gradient(
@@ -132,10 +137,10 @@ body {
 
 /* Shared info card styles */
 .info-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: var(--radius-card);
   padding: 1.25rem;
-  color: white;
+  color: var(--text-primary);
   display: flex;
   gap: 0.75rem;
   box-shadow: var(--shadow-sm);
@@ -209,7 +214,7 @@ body {
 .toggle-selector-btn {
   padding: 0.4rem 1rem;
   border: 1px solid var(--color-brand-primary);
-  color: var(--color-brand-primary);
+  color: var(--text-outline-brand);
   background: transparent;
   border-radius: 10em;
   font-size: 0.85rem;
@@ -219,7 +224,7 @@ body {
 }
 
 .toggle-selector-btn:hover {
-  background: var(--color-brand-primary-2);
+  background: var(--color-brand-primary);
   color: white;
 }
 
@@ -229,7 +234,6 @@ body {
   padding: 2rem;
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-sm);
-  margin-bottom: 2rem;
   box-sizing: border-box;
 }
 
@@ -254,7 +258,7 @@ body {
   padding: 0.25rem 0.75rem;
   border: 1px solid var(--color-brand-primary);
   background: var(--bg-card);
-  color: var(--color-brand-primary);
+  color: var(--text-outline-brand);
   border-radius: 10em;
   font-size: 0.75rem;
   font-weight: 600;
