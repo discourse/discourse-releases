@@ -286,9 +286,6 @@ export default class CommitViewer extends Component {
                 @iconClass="commits-empty-state-icon"
               />
               <p class="commits-empty-state-text">No commits found</p>
-              <p class="commits-empty-state-hint">
-                Try adjusting the version range or filters.
-              </p>
             </div>
           {{/if}}
 

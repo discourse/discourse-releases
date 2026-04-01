@@ -406,14 +406,6 @@ body {
   line-height: 1.4;
 }
 
-.commits-empty-state-hint {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
 .section {
   margin-bottom: 3rem;
 }
