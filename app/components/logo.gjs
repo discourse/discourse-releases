@@ -8,6 +8,8 @@ import "./logo.css";
     viewBox="0 0 224 37"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    focusable="false"
     ...attributes
   >
     <g clip-path="url(#clip0_1_17)">

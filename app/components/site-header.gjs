@@ -6,7 +6,7 @@ export default <template>
     <div class="header-content">
       <div class="header-left">
         <h1 class="site-title">
-          <a href="/" class="title-link">
+          <a href="/" class="title-link" aria-label="Discourse Releases">
             <Logo />
           </a>
         </h1>

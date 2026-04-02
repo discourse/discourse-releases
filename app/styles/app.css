@@ -497,7 +497,7 @@ body {
   border: 2px solid var(--border-color);
   background: var(--bg-card);
   color: var(--text-secondary);
-  border-radius: 6px;
+  border-radius: 10em;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
