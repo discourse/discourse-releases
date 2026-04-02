@@ -17,7 +17,7 @@ export default class LucideIcon extends Component {
       focusable: "false",
     });
 
-    return htmlSafe(svg.outerHTML);
+    return svg;
   }
 
   <template>{{this.markup}}</template>
