@@ -53,19 +53,18 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-brand-primary: #7760DB;
+    --color-brand-primary: #7760db;
     --color-brand-primary-2: #b1a2f6;
-
     --bg-page: #000;
-    --bg-card: #222222;
+    --bg-card: #222;
     --bg-card-hover: #363636;
     --bg-subtle: #242424;
     --bg-code: #242424;
     --text-primary: #dfdfdf;
     --text-secondary: #b0b0b0;
     --text-muted: #888;
-    --text-link: var(--color-brand-primary);
-    --text-link-hover: var(--color-brand-primary-2);
+    --text-link: #a496e8;
+    --text-link-hover: #fff;
     --text-outline-brand: var(--text-primary);
     --border-color: #404040;
     --border-subtle: #333;
@@ -148,7 +147,7 @@ body {
 }
 
 .info-card-link {
-  color: var(--color-brand-primary);
+  color: var(--text-link);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.8rem;
@@ -157,20 +156,20 @@ body {
 }
 
 .info-card-link:hover {
-  color: var(--color-brand-primary-2);
+  color: var(--text-link-hover);
 }
 
 .back-to-versions {
   display: inline-block;
   margin-bottom: 1.5rem;
-  color: var(--color-brand-primary);
+  color: var(--text-link);
   text-decoration: none;
   font-weight: 600;
   transition: all 0.2s;
 }
 
 .back-to-versions:hover {
-  color: var(--color-brand-primary-2);
+  color: var(--text-link-hover);
 }
 
 .header {

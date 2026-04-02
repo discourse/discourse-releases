@@ -59,7 +59,7 @@
 }
 
 .external-link:hover {
-  color: var(--color-brand-primary);
+  color: var(--text-link-hover);
 }
 
 @media (width <= 768px) {

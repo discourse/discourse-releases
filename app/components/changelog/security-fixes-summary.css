@@ -90,7 +90,7 @@
 }
 
 .advisory-link:hover {
-  color: var(--color-brand-primary);
+  color: var(--text-link-hover);
   text-decoration: underline;
 }
 

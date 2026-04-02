@@ -109,11 +109,15 @@ export default class CommitViewer extends Component {
     return this.resolvedRefs.error;
   }
 
-  get isEmptyCommits() {
-    if (!data.commitData || this.refError) {
-      return false;
+  @cached
+  get error() {
+    if (this.refError) {
+      return this.refError;
     }
-    return this.commits.length === 0;
+    if (!data.commitData) {
+      return null;
+    }
+    return this.commits.length === 0 ? "No commits found" : null;
   }
 
   @cached
@@ -278,14 +282,14 @@ export default class CommitViewer extends Component {
             @onFilterChange={{this.updateFilterText}}
           />
 
-          {{#if this.isEmptyCommits}}
+          {{#if this.error}}
             <div class="commits-empty-state" role="status">
               <LucideIcon
                 @icon={{GitCommitHorizontal}}
                 @size={{48}}
                 @iconClass="commits-empty-state-icon"
               />
-              <p class="commits-empty-state-text">No commits found</p>
+              <p class="commits-empty-state-text">{{this.error}}</p>
             </div>
           {{/if}}
 
