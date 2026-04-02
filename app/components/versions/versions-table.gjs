@@ -227,7 +227,7 @@ export default class VersionsTable extends Component {
             Latest version
           </h3>
           <p class="version-info-tiles-description">
-            Most Discourse installations track the latest version, which
+            Most Discourse installations follow the 'latest' channel, which
             receives continuous updates with new features, bug fixes, and
             security&nbsp;patches.
           </p>
