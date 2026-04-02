@@ -214,8 +214,7 @@ export default class VersionsTable extends Component {
       <div class="versions-page-lead">
         <h1 class="versions-page-headline">Discourse Releases</h1>
         <p class="versions-intro">
-          Browse release dates, support timelines, and changelogs for every
-          stable version.
+          Browse release dates, support timelines, and changelogs
         </p>
       </div>
 
