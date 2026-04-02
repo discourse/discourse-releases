@@ -6,7 +6,7 @@ export default class LucideIcon extends Component {
   get markup() {
     const icon = this.args.icon;
     if (!icon) {
-      return htmlSafe("");
+      return;
     }
 
     const svg = createElement(icon, {
