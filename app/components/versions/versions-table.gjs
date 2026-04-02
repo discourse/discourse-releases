@@ -234,16 +234,6 @@ export default class VersionsTable extends Component {
         </article>
         <article class="version-info-tiles-tile">
           <h3 class="version-info-tiles-title">
-            <LucideIcon @icon={{Hash}} @iconClass="version-info-tiles-icon" />
-            Numbered releases
-          </h3>
-          <p class="version-info-tiles-description">
-            Numbered releases are available for those who prefer less
-            frequent&nbsp;changes.
-          </p>
-        </article>
-        <article class="version-info-tiles-tile">
-          <h3 class="version-info-tiles-title">
             <LucideIcon
               @icon={{Calendar}}
               @iconClass="version-info-tiles-icon"
