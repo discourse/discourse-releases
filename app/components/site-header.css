@@ -1,9 +1,6 @@
 .site-header {
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
   padding: 1rem 0;
   margin-bottom: 2rem;
-  box-shadow: var(--shadow-sm);
 }
 
 .header-content {
@@ -43,7 +40,6 @@
 .logo {
   height: 32px;
   width: auto;
-  fill: currentcolor;
   flex-shrink: 0;
 }
 
@@ -54,7 +50,7 @@
 }
 
 .external-link {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
@@ -63,7 +59,7 @@
 }
 
 .external-link:hover {
-  color: var(--text-link);
+  color: var(--text-link-hover);
 }
 
 @media (width <= 768px) {

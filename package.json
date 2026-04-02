@@ -92,6 +92,7 @@
     "execa": "^9.6.1",
     "fast-xml-parser": "^5.5.9",
     "jsdom": "^27.4.0",
+    "lucide": "^1.7.0",
     "semver": "^7.7.3"
   }
 }

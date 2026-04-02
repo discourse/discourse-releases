@@ -2,9 +2,19 @@
   align-items: center;
 }
 
+.translator-card-icon {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.translator-card-icon svg {
+  color: var(--color-brand-primary);
+}
+
 .translator-card p {
   flex: 1;
   margin: 0;
   font-size: 0.95rem;
-  color: rgb(255 255 255 / 95%);
+  color: var(--text-primary);
 }

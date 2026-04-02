@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import "./security-fixes-summary.css";
+import { ShieldAlert } from "lucide";
+import LucideIcon from "../lucide-icon";
 
 export default class SecurityFixesSummary extends Component {
   @tracked isExpanded = false;
@@ -29,13 +31,13 @@ export default class SecurityFixesSummary extends Component {
         class="summary-header"
         {{on "click" this.toggleExpanded}}
       >
-        <div class="summary-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-            <path
-              d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 6h2v2h-2V8zm0 4h2v6h-2v-6z"
-            />
-          </svg>
-        </div>
+        <span class="summary-icon" aria-hidden="true">
+          <LucideIcon
+            @icon={{ShieldAlert}}
+            @size={{24}}
+            @iconClass="summary-icon-lucide"
+          />
+        </span>
         <span class="summary-label">{{this.label}}</span>
         <span class="expand-toggle">{{if this.isExpanded "Hide" "Show"}}</span>
       </button>
@@ -51,7 +53,7 @@ export default class SecurityFixesSummary extends Component {
                 target="_blank"
                 rel="noopener noreferrer"
                 class="advisory-link"
-              >details</a>
+              >Details</a>
             </li>
           {{/each}}
         </ul>

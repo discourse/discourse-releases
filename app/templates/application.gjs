@@ -3,8 +3,11 @@ import SiteHeader from "../components/site-header.gjs";
 
 <template>
   {{pageTitle "Discourse Releases"}}
+  <div class="app-layout">
+    <SiteHeader />
 
-  <SiteHeader />
+    {{outlet}}
+  </div>
 
-  {{outlet}}
+  <div class="app-background" aria-hidden="true"></div>
 </template>

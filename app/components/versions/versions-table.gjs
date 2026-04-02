@@ -3,9 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import "./versions-table.css";
 import VersionsData from "/data/version-support.json";
+import { Calendar, Rocket, ShieldCheck } from "lucide";
 import semver from "semver";
 import eq from "../../helpers/eq.js";
 import { ChangelogData } from "../../lib/git-utils.js";
+import LucideIcon from "../lucide-icon";
 import VersionsTimeline from "./timeline";
 
 export default class VersionsTable extends Component {
@@ -209,27 +211,55 @@ export default class VersionsTable extends Component {
 
   <template>
     <div class="versions-container">
-      <div class="version-info">
-        <p>
-          This site provides information about Discourse versions, their release
-          dates, support timelines, and changelogs.
-        </p>
-        <p>
-          Most Discourse installations track the
-          <strong>latest</strong>
-          version, which receives continuous updates with new features, bug
-          fixes, and security patches.
-        </p>
-        <p>
-          Numbered releases are available for those who prefer less frequent
-          changes. Each monthly release receives security updates for
-          approximately two months. Every 6 months, an Extended Support Release
-          (ESR) is designated, which receives updates for approximately 8
-          months.
+      <div class="versions-page-lead">
+        <h1 class="versions-page-headline">Discourse Releases</h1>
+        <p class="versions-intro">
+          Browse release dates, support timelines, and changelogs
         </p>
       </div>
 
       <VersionsTimeline @versions={{this.groupedVersions}} />
+
+      <div class="version-info-tiles">
+        <article class="version-info-tiles-tile">
+          <h3 class="version-info-tiles-title">
+            <LucideIcon @icon={{Rocket}} @iconClass="version-info-tiles-icon" />
+            Latest version
+          </h3>
+          <p class="version-info-tiles-description">
+            Most Discourse installations follow the
+            <strong>latest</strong>
+            channel, which receives continuous updates with new features, bug
+            fixes, and security&nbsp;patches.
+          </p>
+        </article>
+        <article class="version-info-tiles-tile">
+          <h3 class="version-info-tiles-title">
+            <LucideIcon
+              @icon={{Calendar}}
+              @iconClass="version-info-tiles-icon"
+            />
+            Monthly releases
+          </h3>
+          <p class="version-info-tiles-description">
+            Each monthly release receives security updates for approximately two
+            months.
+          </p>
+        </article>
+        <article class="version-info-tiles-tile">
+          <h3 class="version-info-tiles-title">
+            <LucideIcon
+              @icon={{ShieldCheck}}
+              @iconClass="version-info-tiles-icon"
+            />
+            Extended Support Release
+          </h3>
+          <p class="version-info-tiles-description">
+            Every 6 months, an ESR is designated, which receives updates for
+            approximately 8 months.
+          </p>
+        </article>
+      </div>
 
       <div class="versions-cards">
         {{#each this.groupedVersions as |group|}}

@@ -1,11 +1,11 @@
 .versions-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 1rem 2rem;
 }
 
 .header {
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   text-align: left;
 }
 
@@ -14,22 +14,80 @@
   font-size: 1.5rem;
 }
 
-.version-info {
-  background: var(--bg-card);
-  border-radius: 8px;
-  padding: 1.5rem;
+.versions-page-lead {
   margin-bottom: 2rem;
-  box-shadow: var(--shadow-sm);
+  text-align: center;
 }
 
-.version-info p {
-  margin: 0 0 1rem;
-  line-height: 1.7;
+.versions-page-headline {
+  margin: 0 0 0.5rem;
+  font-size: 2.125rem;
+  font-weight: 900;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+@media (width <= 640px) {
+  .versions-page-headline {
+    font-size: 1.75rem;
+  }
+}
+
+.versions-intro {
+  margin: 0 auto;
+  line-height: 1.65;
+  font-size: 1.1rem;
+}
+
+.version-info-tiles {
+  --version-info-tile-icon-size: 16px;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (width <= 640px) {
+  .version-info-tiles {
+    grid-template-columns: 1fr;
+  }
+}
+
+.version-info-tiles-tile {
+  margin: 0;
+}
+
+.version-info-tiles-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.938rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.version-info-tiles-icon {
+  flex-shrink: 0;
+  margin-top: 0.1em;
+  width: var(--version-info-tile-icon-size);
+  height: var(--version-info-tile-icon-size);
   color: var(--text-primary);
 }
 
-.version-info p:last-child {
-  margin-bottom: 0;
+.version-info-tiles-description {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.version-info-tiles-description strong {
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .loading {
@@ -41,7 +99,7 @@
 .versions-cards {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.75rem;
 }
 
 .version-card {
@@ -57,11 +115,6 @@
 
 .version-card:hover {
   box-shadow: var(--shadow-hover);
-}
-
-.version-card:target {
-  box-shadow: oklch(from var(--color-active-development) l c h / 30%) 0 4px 12px;
-  transform: scale(1.01);
 }
 
 .card-header {
@@ -163,10 +216,6 @@
 
 .version-card.eol-version .card-header {
   background: oklch(from var(--color-end-of-life) l c h / 20%);
-}
-
-.version-card.eol-version {
-  opacity: 0.8;
 }
 
 .version-card.active-version .card-header {

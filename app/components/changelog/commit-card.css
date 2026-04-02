@@ -1,6 +1,6 @@
 .commit-card {
   background: var(--bg-card);
-  border-radius: 8px;
+  border-radius: var(--radius-card);
   padding: 1rem 1.5rem;
   box-shadow: var(--shadow-sm);
   transition: box-shadow 0.2s ease;
@@ -160,7 +160,7 @@
 .commit-full-body {
   padding: 1rem;
   background-color: var(--bg-code);
-  border-radius: 4px;
+  border-radius: 8px;
   color: var(--text-primary);
   font-size: 0.9rem;
   line-height: 1.6;

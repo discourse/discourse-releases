@@ -37,16 +37,16 @@
 .error-link {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background: var(--color-active-development);
+  background: var(--color-brand-primary);
   color: white;
   text-decoration: none;
-  border-radius: 6px;
   font-weight: 600;
   transition: all 0.2s;
+  border-radius: 10em;
 }
 
 .error-link:hover {
-  background: oklch(from var(--color-active-development) calc(l * 0.9) c h);
+  background: var(--color-brand-primary-2);
   transform: translateY(-1px);
   box-shadow: var(--shadow-hover);
 }

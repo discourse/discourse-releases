@@ -6,9 +6,8 @@ export default <template>
     <div class="header-content">
       <div class="header-left">
         <h1 class="site-title">
-          <a href="/" class="title-link">
-            <Logo class="logo" />
-            <span>Discourse Releases</span>
+          <a href="/" class="title-link" aria-label="Discourse Releases">
+            <Logo />
           </a>
         </h1>
       </div>
@@ -25,7 +24,7 @@ export default <template>
           class="external-link"
           target="_blank"
           rel="noopener noreferrer"
-        >Meta ↗</a>
+        >Community ↗</a>
         <a
           href="https://github.com/discourse/discourse"
           class="external-link"
