@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
 import { createElement } from "lucide";
 
 export default class LucideIcon extends Component {

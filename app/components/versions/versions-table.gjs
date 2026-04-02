@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import "./versions-table.css";
 import VersionsData from "/data/version-support.json";
-import { Calendar, Hash, Rocket, ShieldCheck } from "lucide";
+import { Calendar, Rocket, ShieldCheck } from "lucide";
 import semver from "semver";
 import eq from "../../helpers/eq.js";
 import { ChangelogData } from "../../lib/git-utils.js";
