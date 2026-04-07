@@ -8,5 +8,13 @@ export default class ChangelogCustomRoute extends Route {
     end: {
       refreshModel: false,
     },
+    tab: {
+      refreshModel: false,
+      replace: true,
+    },
+    filter: {
+      refreshModel: false,
+      replace: true,
+    },
   };
 }

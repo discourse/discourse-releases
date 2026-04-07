@@ -10,5 +10,9 @@ import metaDescription from "../helpers/meta-description";
     @start={{@controller.start}}
     @end={{@controller.end}}
     @onUpdateRange={{@controller.updateRange}}
+    @activeTab={{@controller.tab}}
+    @onTabChange={{@controller.updateTab}}
+    @filterText={{@controller.filter}}
+    @onFilterChange={{@controller.updateFilter}}
   />
 </template>
