@@ -77,7 +77,8 @@ module("Acceptance | provisional changelog", function (hooks) {
         .dom(".error-container")
         .exists("shows error page for non-next patch");
     } else {
-      assert.ok(true, "skipped - no provisional versions available");
+      // eslint-disable-next-line qunit/no-conditional-assertions
+      assert.true(true, "skipped - no provisional versions available");
     }
   });
 });

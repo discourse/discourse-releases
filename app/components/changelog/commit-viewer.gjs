@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import VerticalCollection from "@html-next/vertical-collection/components/vertical-collection/component";
+import { VerticalCollection } from "@html-next/vertical-collection";
 import { GitCommitHorizontal, Info } from "lucide";
 import config from "discourse-releases/config/environment";
 import {

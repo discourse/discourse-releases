@@ -82,7 +82,7 @@ module("Unit | Lib | git-utils | resolveRef", function () {
 
     try {
       data.resolveRef("xyz789");
-      assert.ok(false, "should have thrown");
+      assert.true(false, "should have thrown");
     } catch (error) {
       assert.strictEqual(error.name, "UnknownRefError");
       assert.strictEqual(error.ref, "xyz789");
@@ -112,7 +112,7 @@ module("Unit | Lib | git-utils | resolveRef", function () {
 
     try {
       data.resolveRef("abc123");
-      assert.ok(false, "should have thrown");
+      assert.true(false, "should have thrown");
     } catch (error) {
       assert.strictEqual(error.name, "AmbiguousRefError");
       assert.strictEqual(error.ref, "abc123");
@@ -132,7 +132,7 @@ module("Unit | Lib | git-utils | resolveRef", function () {
 
     try {
       data.resolveRef("abc");
-      assert.ok(false, "should have thrown");
+      assert.true(false, "should have thrown");
     } catch (error) {
       assert.true(error.message.includes("10 commits"));
       assert.true(error.message.includes("and 5 more"));

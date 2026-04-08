@@ -3,7 +3,7 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trackedWeakMap } from "@ember/reactive/collections";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import "./commit-card.css";
 import { COMMIT_TYPES, getCommitType } from "../../lib/git-utils.js";
 import highlightTerm from "../../modifiers/highlight-term.js";
@@ -105,7 +105,7 @@ export default class CommitCard extends Component {
       class="commit-card expandable"
       style={{if
         this.commitTypeConfig
-        (htmlSafe (concat "border-left-color: " this.commitTypeConfig.color))
+        (trustHTML (concat "border-left-color: " this.commitTypeConfig.color))
       }}
       {{on "click" this.toggleDetails}}
     >
@@ -120,7 +120,7 @@ export default class CommitCard extends Component {
           {{#if this.commitTypeConfig}}
             <span
               class="commit-badge"
-              style={{htmlSafe
+              style={{trustHTML
                 (concat "background-color: " this.commitTypeConfig.color)
               }}
             >{{this.commitTypeConfig.label}}</span>

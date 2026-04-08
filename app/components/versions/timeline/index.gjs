@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import "./versions-timeline.css";
 import TimelineLegend from "./timeline-legend";
 import TimelineRow from "./timeline-row";
@@ -64,7 +64,7 @@ export default class VersionsTimeline extends Component {
     while (current <= maxDate) {
       const percent = dateToPercent(current, minDate, totalDays);
       markers.push({
-        style: htmlSafe(`left: ${percent}%`),
+        style: trustHTML(`left: ${percent}%`),
         month: current.toLocaleDateString("en-US", { month: "short" }),
         year: current.toLocaleDateString("en-US", { year: "numeric" }),
       });

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 export default class TimelineRow extends Component {
   get devWidth() {
@@ -15,20 +15,20 @@ export default class TimelineRow extends Component {
   }
 
   get devStyle() {
-    return htmlSafe(
+    return trustHTML(
       `left: ${this.args.devStart}%; width: ${this.devWidth}%; background-color: var(--color-active-development)`
     );
   }
 
   get supportedStyle() {
-    return htmlSafe(
+    return trustHTML(
       `left: ${Math.round(this.args.supportStart)}%; width: ${this.supportedWidth}%; background-color: var(--color-supported)`
     );
   }
 
   get barStyle() {
     const totalWidth = this.devWidth + this.supportedWidth;
-    return htmlSafe(
+    return trustHTML(
       `left: ${this.args.devStart}%; width: ${totalWidth}%; background-color: var(--color-supported)`
     );
   }
