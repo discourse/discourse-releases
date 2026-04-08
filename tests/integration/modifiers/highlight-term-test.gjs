@@ -21,7 +21,11 @@ module("Integration | Modifier | highlight-term", function (hooks) {
     );
 
     const highlight = CSS.highlights.get("test-highlight");
-    assert.ok(highlight, "highlight should be registered");
+    assert.notStrictEqual(
+      highlight,
+      undefined,
+      "highlight should be registered"
+    );
     assert.strictEqual(
       highlight.size,
       3,
@@ -43,7 +47,11 @@ module("Integration | Modifier | highlight-term", function (hooks) {
     );
 
     const highlight = CSS.highlights.get("multi-node-highlight");
-    assert.ok(highlight, "highlight should be registered");
+    assert.notStrictEqual(
+      highlight,
+      undefined,
+      "highlight should be registered"
+    );
     assert.strictEqual(
       highlight.size,
       2,
@@ -62,8 +70,9 @@ module("Integration | Modifier | highlight-term", function (hooks) {
     );
 
     const highlight = CSS.highlights.get("empty-highlight");
-    assert.notOk(
+    assert.strictEqual(
       highlight,
+      undefined,
       "highlight should not be registered for empty search"
     );
   });
@@ -79,7 +88,11 @@ module("Integration | Modifier | highlight-term", function (hooks) {
     );
 
     const highlight = CSS.highlights.get("case-highlight");
-    assert.ok(highlight, "highlight should be registered");
+    assert.notStrictEqual(
+      highlight,
+      undefined,
+      "highlight should be registered"
+    );
     assert.strictEqual(highlight.size, 4, "should match all case variations");
   });
 });

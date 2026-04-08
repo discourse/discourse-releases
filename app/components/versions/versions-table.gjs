@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import "./versions-table.css";
 import VersionsData from "/data/version-support.json";
@@ -11,9 +10,7 @@ import LucideIcon from "../lucide-icon";
 import VersionsTimeline from "./timeline";
 
 export default class VersionsTable extends Component {
-  @tracked data = new ChangelogData();
-
-  @tracked versionSupport = [];
+  data = new ChangelogData();
 
   get versions() {
     if (!this.data.commitData) {

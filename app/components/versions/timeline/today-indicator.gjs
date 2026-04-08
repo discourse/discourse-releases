@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 
 export default class TodayIndicator extends Component {
   get style() {
-    return htmlSafe(`left: ${this.args.position}%`);
+    return trustHTML(`left: ${this.args.position}%`);
   }
 
   <template>
