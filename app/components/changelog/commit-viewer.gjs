@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import VerticalCollection from "@html-next/vertical-collection/components/vertical-collection/component";
 import { GitCommitHorizontal, Info } from "lucide";
@@ -25,8 +25,13 @@ import TranslatorCard from "./translator-card";
 const data = new ChangelogData();
 
 export default class CommitViewer extends Component {
-  @tracked activeTab = "all";
-  @tracked filterText = "";
+  get activeTab() {
+    return this.args.activeTab?.toUpperCase() || "all";
+  }
+
+  get filterText() {
+    return this.args.filterText || "";
+  }
 
   get startHash() {
     return this.args.start || "";
@@ -142,12 +147,12 @@ export default class CommitViewer extends Component {
 
   @action
   setActiveTab(tab) {
-    this.activeTab = tab;
+    this.args.onTabChange?.(tab);
   }
 
   @action
   updateFilterText(event) {
-    this.filterText = event.target.value;
+    this.args.onFilterChange?.(event);
   }
 
   get formattedCommitCount() {

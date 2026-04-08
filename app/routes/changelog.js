@@ -2,6 +2,11 @@ import Route from "@ember/routing/route";
 import CommitsData from "/data/commits.json";
 
 export default class ChangelogRoute extends Route {
+  queryParams = {
+    tab: { replace: true },
+    filter: { replace: true },
+  };
+
   beforeModel(transition) {
     const end = transition.to.params.end.replace(/\/$/, "");
 
