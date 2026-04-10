@@ -211,7 +211,7 @@ export default class CommitViewer extends Component {
         <div class="changelog-info">
           <p class="changelog-range">
             <strong>{{this.displayStartRef}}</strong>
-            →
+            <span class="changelog-range-arrow">→</span>
             <strong>{{this.displayEndRef}}</strong>
           </p>
           <RangeSelector

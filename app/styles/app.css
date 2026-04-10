@@ -172,6 +172,12 @@ body {
   color: var(--text-link-hover);
 }
 
+@media (width <= 768px) {
+  .back-to-versions {
+    margin-bottom: 0.5rem;
+  }
+}
+
 .header {
   text-align: center;
   margin-bottom: 2rem;
@@ -202,6 +208,17 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1.25rem;
+}
+
+@media (width <= 768px) {
+  .changelog-range {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .changelog-range-arrow {
+    transform: rotate(90deg);
+  }
 }
 
 .changelog-range strong {
