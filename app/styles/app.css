@@ -160,7 +160,7 @@ body {
 }
 
 .back-to-versions {
-  display: inline-block;
+  display: block;
   margin-bottom: 1.5rem;
   color: var(--text-link);
   text-decoration: none;
@@ -174,7 +174,8 @@ body {
 
 @media (width <= 768px) {
   .back-to-versions {
-    margin-bottom: 0.5rem;
+    margin: 0 auto;
+    text-align: center;
   }
 }
 

@@ -13,14 +13,12 @@
   gap: 2rem;
 }
 
-.header-left {
+.site-title {
   display: flex;
   align-items: center;
-}
-
-.site-title {
   font-size: 1.5rem;
   font-weight: 700;
+  line-height: 1;
   margin: 0;
 }
 
@@ -62,28 +60,129 @@
   color: var(--text-link-hover);
 }
 
+.site-header-menu-btn,
+.site-header-mobile-close {
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.site-header-menu-btn {
+  display: none;
+}
+
+.site-header-mobile-close {
+  display: inline-flex;
+}
+
+.site-header-menu-btn:hover,
+.site-header-mobile-close:hover {
+  color: var(--text-link-hover);
+  background-color: var(--bg-subtle);
+}
+
+.site-header-menu-btn:focus-visible,
+.site-header-mobile-close:focus-visible {
+  outline: 2px solid var(--text-outline-brand);
+  outline-offset: 2px;
+}
+
+.site-header-mobile-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden auto;
+  background-color: var(--bg-page);
+  border-radius: 0 0 12px 12px;
+  box-shadow: var(--shadow-md);
+  animation: site-header-overlay-in 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header-mobile-overlay {
+    animation: none;
+  }
+}
+
+.site-header-mobile-top {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 1rem 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-header-mobile-nav {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.75rem 1rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.site-header-mobile-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.55rem 0;
+  border-radius: 6px;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.site-header-mobile-link:hover {
+  color: var(--text-link-hover);
+  background-color: var(--bg-subtle);
+}
+
+.site-header-mobile-link:focus-visible {
+  outline: 2px solid var(--text-outline-brand);
+  outline-offset: 2px;
+}
+
 @media (width <= 768px) {
-  .header-content {
-    gap: 1rem;
+  .external-links-desktop {
+    display: none;
   }
 
-  .site-title {
-    font-size: 1.25rem;
+  .site-header-menu-btn {
+    display: inline-flex;
+  }
+}
+
+@keyframes site-header-overlay-in {
+  from {
+    opacity: 0;
   }
 
-  .title-link {
-    gap: 0.4rem;
-  }
-
-  .logo {
-    height: 28px;
-  }
-
-  .external-links {
-    gap: 1rem;
-  }
-
-  .external-link {
-    font-size: 0.85rem;
+  to {
+    opacity: 1;
   }
 }
