@@ -9,6 +9,12 @@
   text-align: left;
 }
 
+@media (width <= 768px) {
+  .header {
+    margin-bottom: 2rem;
+  }
+}
+
 .header p {
   color: var(--text-secondary);
   font-size: 1.5rem;
