@@ -197,6 +197,12 @@ export class ChangelogData {
     return ref;
   }
 
+  // A commit's nearest-tag version without the "+N" distance suffix.
+  commitVersion(hash) {
+    const version = hash && this.commitData?.commits[hash]?.version;
+    return version ? version.replace(/\s*\+\d+$/, "") : null;
+  }
+
   // Iterative traversal to find all commits reachable from a given commit
   traverseParents(commitHash) {
     if (!this.commitData) {
@@ -403,18 +409,52 @@ export function filterFeaturesByCommits(features, commits, resolveRef) {
   });
 }
 
-// Filter security advisories that have a patched version in the commit range
-export function filterAdvisoriesByCommits(advisories, commits) {
-  if (!commits.length || !advisories.length) {
+function sameMonthlyRelease(a, b) {
+  return a.major === b.major && a.minor === b.minor;
+}
+
+// GitHub range ("comma" = AND, ".betaN" shorthand) to a semver range string.
+function normalizeRange(range) {
+  if (!range) {
+    return null;
+  }
+  return range.replace(/,\s*/g, " ").replace(/\.beta(\d+)/g, "-beta.$1");
+}
+
+// Matched per release line, so a backport-fixed version escapes a broad ">= 0".
+export function isAffectedByAdvisory(version, advisory) {
+  const target = typeof version === "string" ? parseVersion(version) : version;
+  if (!target) {
+    return false;
+  }
+
+  for (const vuln of advisory.vulnerabilities || []) {
+    const patched = vuln.patched ? parseVersion(vuln.patched) : null;
+    if (!patched || !sameMonthlyRelease(patched, target)) {
+      continue;
+    }
+
+    const range = normalizeRange(vuln.range);
+    const introduced =
+      !range || semver.satisfies(target, range, { includePrerelease: true });
+
+    if (introduced && semver.lt(target, patched)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Advisories resolved within the range: start affected, end not.
+export function filterAdvisoriesByRange(advisories, startVersion, endVersion) {
+  if (!advisories.length || !startVersion || !endVersion) {
     return [];
   }
 
-  const { newest, oldest } = getVersionRange(commits);
-
-  return advisories.filter((advisory) => {
-    // Check if any patched version falls within the range
-    return advisory.patched_versions?.some((version) =>
-      versionInRange(version, oldest, newest)
-    );
-  });
+  return advisories.filter(
+    (advisory) =>
+      isAffectedByAdvisory(startVersion, advisory) &&
+      !isAffectedByAdvisory(endVersion, advisory)
+  );
 }
