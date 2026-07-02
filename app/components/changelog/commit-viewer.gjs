@@ -8,7 +8,7 @@ import {
   AmbiguousRefError,
   ChangelogData,
   countCommitsByType,
-  filterAdvisoriesByCommits,
+  filterAdvisoriesByRange,
   filterCommits,
   filterFeaturesByCommits,
   sortCommitsByDate,
@@ -137,7 +137,12 @@ export default class CommitViewer extends Component {
 
   @cached
   get matchingAdvisories() {
-    return filterAdvisoriesByCommits(data.securityAdvisories, this.allCommits);
+    const { start, end } = this.resolvedRefs;
+    return filterAdvisoriesByRange(
+      data.securityAdvisories,
+      data.commitVersion(start),
+      data.commitVersion(end)
+    );
   }
 
   @action

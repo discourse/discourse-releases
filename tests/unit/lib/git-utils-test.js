@@ -2,6 +2,8 @@ import { module, test } from "qunit";
 import {
   AmbiguousRefError,
   ChangelogData,
+  filterAdvisoriesByRange,
+  isAffectedByAdvisory,
   UnknownRefError,
 } from "discourse-releases/lib/git-utils";
 
@@ -168,5 +170,132 @@ module("Unit | Lib | git-utils | resolveRef", function () {
       data.resolveRef("abc123"),
       "fff999def456abc123def456abc123def456abcd"
     );
+  });
+});
+
+// Mirrors a real advisory: mainline fixed at 2026.6.0, backported to 2026.5/4/1.
+const advisory = {
+  ghsa_id: "GHSA-test",
+  vulnerabilities: [
+    { range: ">= 0", patched: "2026.6.0" },
+    { range: ">= 2026.5.0-latest", patched: "2026.5.1" },
+    { range: ">= 2026.4.0-latest", patched: "2026.4.2" },
+    { range: ">= 2026.1.0-latest", patched: "2026.1.5" },
+  ],
+};
+
+module("Unit | Lib | git-utils | isAffectedByAdvisory", function () {
+  test("a version below its line's patch is affected", function (assert) {
+    assert.true(isAffectedByAdvisory("2026.5.0", advisory));
+  });
+
+  test("a version at its line's patch is not affected", function (assert) {
+    assert.false(isAffectedByAdvisory("2026.5.1", advisory));
+  });
+
+  test("a later version on a patched line is not affected", function (assert) {
+    assert.false(isAffectedByAdvisory("2026.5.2", advisory));
+  });
+
+  test("the mainline patch version is not affected", function (assert) {
+    assert.false(isAffectedByAdvisory("2026.6.0", advisory));
+  });
+
+  test("an in-development mainline prerelease is affected", function (assert) {
+    assert.true(isAffectedByAdvisory("2026.6.0-latest.3", advisory));
+  });
+
+  test("a broad mainline entry does not mark a backported stable version as affected", function (assert) {
+    assert.false(isAffectedByAdvisory("2026.5.1", advisory));
+  });
+
+  test("a version on a line the advisory never patched is not affected", function (assert) {
+    assert.false(isAffectedByAdvisory("2026.3.0", advisory));
+  });
+});
+
+module("Unit | Lib | git-utils | filterAdvisoriesByRange", function () {
+  test("lists an advisory resolved within the range", function (assert) {
+    const result = filterAdvisoriesByRange([advisory], "2026.5.0", "2026.6.0");
+
+    assert.deepEqual(
+      result.map((a) => a.ghsa_id),
+      ["GHSA-test"],
+      "start is affected and end is patched"
+    );
+  });
+
+  test("hides an advisory already backported to the start version", function (assert) {
+    const result = filterAdvisoriesByRange([advisory], "2026.5.1", "2026.6.0");
+
+    assert.deepEqual(
+      result.map((a) => a.ghsa_id),
+      [],
+      "the fix was already present in 2026.5.1"
+    );
+  });
+
+  test("hides an advisory whose fix is not yet in the end version", function (assert) {
+    const result = filterAdvisoriesByRange([advisory], "2026.4.0", "2026.4.1");
+
+    assert.deepEqual(
+      result.map((a) => a.ghsa_id),
+      [],
+      "end is still below the 2026.4.2 patch"
+    );
+  });
+
+  test("resolves an advisory on a backported stable line", function (assert) {
+    const result = filterAdvisoriesByRange([advisory], "2026.4.1", "2026.4.2");
+
+    assert.deepEqual(
+      result.map((a) => a.ghsa_id),
+      ["GHSA-test"],
+      "the stable-line backport is recognised as the resolving version"
+    );
+  });
+
+  test("returns nothing when an endpoint version is missing", function (assert) {
+    assert.deepEqual(
+      filterAdvisoriesByRange([advisory], null, "2026.6.0"),
+      [],
+      "an unresolved endpoint yields no advisories"
+    );
+  });
+});
+
+module("Unit | Lib | git-utils | commitVersion", function () {
+  function createChangelogData(commits, refs = {}) {
+    const data = new ChangelogData();
+    data.commitData = {
+      commits,
+      refs: { tags: refs.tags || {}, branches: refs.branches || {} },
+    };
+    return data;
+  }
+
+  test("returns a commit's version stripped of its distance suffix", function (assert) {
+    const hash = "abc123def456abc123def456abc123def456abcd";
+    const data = createChangelogData(
+      { [hash]: { version: "2026.6.0 +12" } },
+      { tags: { "v2026.6.0": hash }, branches: { latest: hash } }
+    );
+
+    assert.strictEqual(data.commitVersion(hash), "2026.6.0", "by hash");
+    assert.strictEqual(
+      data.commitVersion(data.resolveRef("v2026.6.0")),
+      "2026.6.0",
+      "by tag"
+    );
+    assert.strictEqual(
+      data.commitVersion(data.resolveRef("latest")),
+      "2026.6.0",
+      "by branch"
+    );
+  });
+
+  test("returns null for an unknown hash", function (assert) {
+    const data = createChangelogData({});
+    assert.strictEqual(data.commitVersion("deadbeef"), null);
   });
 });
