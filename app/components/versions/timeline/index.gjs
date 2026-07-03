@@ -102,7 +102,8 @@ export default class VersionsTimeline extends Component {
           supportStart: dateToPercent(releaseDate, minDate, totalDays),
           eol: dateToPercent(endDate, minDate, totalDays),
         };
-      });
+      })
+      .filter((bar) => bar.eol >= 0);
   }
 
   <template>
