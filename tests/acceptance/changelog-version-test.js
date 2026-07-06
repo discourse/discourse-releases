@@ -15,7 +15,7 @@ module("Acceptance | changelog version", function (hooks) {
 
   test("displays version range", async function (assert) {
     assert.dom(".changelog-range").hasText(/→/);
-    assert.dom(".changelog-range strong").exists({ count: 2 });
+    assert.dom(".changelog-range .changelog-ref-name").exists({ count: 2 });
   });
 
   test("displays back link", async function (assert) {

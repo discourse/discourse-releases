@@ -10,6 +10,13 @@ export default class RefSelector extends Component {
   @tracked advancedMode = false;
   @tracked inputValue = "";
 
+  isSelected = (value) => {
+    if (this.currentValue) {
+      return this.currentValue === value;
+    }
+    return value === this.args.defaultValue;
+  };
+
   constructor() {
     super(...arguments);
     // If the incoming ref isn't a selectable named ref (i.e. it's a bare commit
@@ -29,13 +36,6 @@ export default class RefSelector extends Component {
     const provisional = data.commitData.provisionalVersions || {};
     return !(tags[value] || branches[value] || provisional[value]);
   }
-
-  isSelected = (value) => {
-    if (this.currentValue) {
-      return this.currentValue === value;
-    }
-    return value === this.args.defaultValue;
-  };
 
   get currentValue() {
     return this.args.value || "";
