@@ -421,29 +421,36 @@ function normalizeRange(range) {
   return range.replace(/,\s*/g, " ").replace(/\.beta(\d+)/g, "-beta.$1");
 }
 
-// Matched per release line, so a backport-fixed version escapes a broad ">= 0".
+// Each advisory entry describes one release line. Prefer the entry for the
+// target's own line, so a backport-fixed version escapes a broad ">= 0".
+// If the target's line has no entry (e.g. an EOL line that never received a
+// backport), fall back to the unscoped mainline entries so the version is still
+// matched by their range.
 export function isAffectedByAdvisory(version, advisory) {
   const target = typeof version === "string" ? parseVersion(version) : version;
   if (!target) {
     return false;
   }
 
-  for (const vuln of advisory.vulnerabilities || []) {
-    const patched = vuln.patched ? parseVersion(vuln.patched) : null;
-    if (!patched || !sameMonthlyRelease(patched, target)) {
-      continue;
-    }
+  const entries = (advisory.vulnerabilities || [])
+    .map((vuln) => ({
+      patched: vuln.patched ? parseVersion(vuln.patched) : null,
+      range: normalizeRange(vuln.range),
+    }))
+    .filter((entry) => entry.patched);
 
-    const range = normalizeRange(vuln.range);
+  // Entries whose patched version shares the target's release line.
+  const lineEntries = entries.filter((entry) =>
+    sameMonthlyRelease(entry.patched, target)
+  );
+  const applicable = lineEntries.length ? lineEntries : entries;
+
+  return applicable.some((entry) => {
     const introduced =
-      !range || semver.satisfies(target, range, { includePrerelease: true });
-
-    if (introduced && semver.lt(target, patched)) {
-      return true;
-    }
-  }
-
-  return false;
+      !entry.range ||
+      semver.satisfies(target, entry.range, { includePrerelease: true });
+    return introduced && semver.lt(target, entry.patched);
+  });
 }
 
 // Advisories resolved within the range: start affected, end not.

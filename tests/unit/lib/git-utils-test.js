@@ -209,8 +209,15 @@ module("Unit | Lib | git-utils | isAffectedByAdvisory", function () {
     assert.false(isAffectedByAdvisory("2026.5.1", advisory));
   });
 
-  test("a version on a line the advisory never patched is not affected", function (assert) {
-    assert.false(isAffectedByAdvisory("2026.3.0", advisory));
+  test("a version on a line the advisory never patched falls back to the mainline entry", function (assert) {
+    // 2026.3 got no dedicated backport, so it falls back to the ">= 0" mainline
+    // entry (patched 2026.6.0) and is still below that fix, hence affected. This
+    // is what lets an old/EOL start version surface fixes resolved later.
+    assert.true(isAffectedByAdvisory("2026.3.0", advisory));
+  });
+
+  test("an old EOL version with no matching line is affected via the mainline entry", function (assert) {
+    assert.true(isAffectedByAdvisory("3.4.1", advisory));
   });
 });
 
