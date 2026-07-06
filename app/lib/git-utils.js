@@ -203,6 +203,46 @@ export class ChangelogData {
     return version ? version.replace(/\s*\+\d+$/, "") : null;
   }
 
+  // Structured label for a ref, so the UI can style the parts separately.
+  // Returns { name, distance, hash }:
+  //   - name: the tag/branch name, or a bare hash's nearest-tag version ("v3.4.1")
+  //   - distance: the "+N" commits-since-tag suffix for a bare hash, else null
+  //   - hash: the resolved commit's short hash, shown for every ref
+  describeRef(ref) {
+    if (!this.commitData || !ref) {
+      return { name: ref, distance: null, hash: null };
+    }
+
+    let hash;
+    try {
+      hash = this.resolveRef(ref);
+    } catch {
+      // Unresolvable or ambiguous ref: show it verbatim, without a hash.
+      return { name: ref, distance: null, hash: null };
+    }
+
+    const shortHash = hash.substring(0, 7);
+
+    // Named refs (tags/branches) display by their name.
+    if (this.commitData.refs.tags[ref] || this.commitData.refs.branches[ref]) {
+      return { name: ref, distance: null, hash: shortHash };
+    }
+
+    // Bare commit hash: show its nearest-tag version, splitting the "+N"
+    // distance off so it can be de-emphasised in the UI.
+    const version = this.commitData.commits[hash]?.version;
+    if (!version) {
+      return { name: shortHash, distance: null, hash: null };
+    }
+
+    const distanceMatch = version.match(/\s*(\+\d+)$/);
+    return {
+      name: `v${version.replace(/\s*\+\d+$/, "")}`,
+      distance: distanceMatch ? distanceMatch[1] : null,
+      hash: shortHash,
+    };
+  }
+
   // Iterative traversal to find all commits reachable from a given commit
   traverseParents(commitHash) {
     if (!this.commitData) {
