@@ -17,6 +17,26 @@ export default class RefSelector extends Component {
     return value === this.args.defaultValue;
   };
 
+  constructor() {
+    super(...arguments);
+    // If the incoming ref isn't a selectable named ref (i.e. it's a bare commit
+    // hash), open directly in advanced mode with the hash shown and editable.
+    if (this.isAdvancedRef(this.currentValue)) {
+      this.advancedMode = true;
+      this.inputValue = this.currentValue;
+    }
+  }
+
+  // A ref that can't be represented by the dropdown (branch/provisional/tag).
+  isAdvancedRef(value) {
+    if (!value || !data.commitData) {
+      return false;
+    }
+    const { tags, branches } = data.commitData.refs;
+    const provisional = data.commitData.provisionalVersions || {};
+    return !(tags[value] || branches[value] || provisional[value]);
+  }
+
   get currentValue() {
     return this.args.value || "";
   }

@@ -173,6 +173,62 @@ module("Unit | Lib | git-utils | resolveRef", function () {
   });
 });
 
+module("Unit | Lib | git-utils | describeRef", function () {
+  const HASH = "0a7a0dcffba482acdf3140335a7b80d37fac6df2";
+
+  function createData() {
+    const data = new ChangelogData();
+    data.commitData = {
+      commits: { [HASH]: { version: "3.4.1 +4", parents: [] } },
+      refs: {
+        tags: { "v2026.6.0": "1111111111111111111111111111111111111111" },
+        branches: { latest: "2222222222222222222222222222222222222222" },
+      },
+    };
+    return data;
+  }
+
+  test("splits version, distance, and hash for a partial commit hash", function (assert) {
+    assert.deepEqual(createData().describeRef("0a7a0dc"), {
+      name: "v3.4.1",
+      distance: "+4",
+      hash: "0a7a0dc",
+    });
+  });
+
+  test("splits version, distance, and hash for a full commit hash", function (assert) {
+    assert.deepEqual(createData().describeRef(HASH), {
+      name: "v3.4.1",
+      distance: "+4",
+      hash: "0a7a0dc",
+    });
+  });
+
+  test("shows a tag ref by name with its short hash", function (assert) {
+    assert.deepEqual(createData().describeRef("v2026.6.0"), {
+      name: "v2026.6.0",
+      distance: null,
+      hash: "1111111",
+    });
+  });
+
+  test("shows a branch ref by name with its short hash", function (assert) {
+    assert.deepEqual(createData().describeRef("latest"), {
+      name: "latest",
+      distance: null,
+      hash: "2222222",
+    });
+  });
+
+  test("returns an unresolvable ref as-is with no hash", function (assert) {
+    assert.deepEqual(createData().describeRef("zzzzzz"), {
+      name: "zzzzzz",
+      distance: null,
+      hash: null,
+    });
+  });
+});
+
 // Mirrors a real advisory: mainline fixed at 2026.6.0, backported to 2026.5/4/1.
 const advisory = {
   ghsa_id: "GHSA-test",

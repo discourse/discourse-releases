@@ -24,6 +24,17 @@ import TranslatorCard from "./translator-card";
 
 const data = new ChangelogData();
 
+const RefDisplay = <template>
+  <span class="changelog-ref">
+    <span class="changelog-ref-name">{{@ref.name}}{{#if @ref.distance}}<span
+          class="changelog-ref-distance"
+        >{{@ref.distance}}</span>{{/if}}</span>
+    {{#if @ref.hash}}
+      <span class="changelog-ref-hash">{{@ref.hash}}</span>
+    {{/if}}
+  </span>
+</template>;
+
 export default class CommitViewer extends Component {
   get activeTab() {
     return this.args.activeTab?.toUpperCase() || "all";
@@ -177,22 +188,28 @@ export default class CommitViewer extends Component {
 
   get displayStartRef() {
     if (!data.commitData) {
-      return "";
+      return { name: "", distance: null, hash: null };
     }
     const endRef = this.endHash.trim() || data.defaultEndRef;
-    return (
+    const startRef =
       this.startHash.trim() ||
       data.getPreviousVersion(endRef) ||
-      data.defaultStartRef
-    );
+      data.defaultStartRef;
+    return data.describeRef(startRef);
   }
 
   get displayEndRef() {
     if (this.provisionalInfo) {
-      return this.args.end;
+      // Provisional versions display their version name, but still resolve the
+      // underlying branch tip so a commit hash is shown.
+      return {
+        name: this.args.end,
+        distance: null,
+        hash: data.describeRef(this.endHash).hash,
+      };
     }
 
-    return this.endHash.trim() || data.defaultEndRef;
+    return data.describeRef(this.endHash.trim() || data.defaultEndRef);
   }
 
   // Show translator card only on main changelog pages for .0 releases
@@ -215,9 +232,9 @@ export default class CommitViewer extends Component {
       <div class="header">
         <div class="changelog-info">
           <p class="changelog-range">
-            <strong>{{this.displayStartRef}}</strong>
+            <RefDisplay @ref={{this.displayStartRef}} />
             <span class="changelog-range-arrow">→</span>
-            <strong>{{this.displayEndRef}}</strong>
+            <RefDisplay @ref={{this.displayEndRef}} />
           </p>
           <RangeSelector
             @startValue={{this.startHash}}
