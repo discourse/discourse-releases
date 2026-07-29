@@ -164,17 +164,6 @@ export default class VersionsTable extends Component {
   }
 
   formatDate(isoString) {
-    // Check if it's yyyy-mm format (no day)
-    if (/^\d{4}-\d{2}$/.test(isoString)) {
-      const [year, month] = isoString.split("-");
-      const date = new Date(year, parseInt(month, 10) - 1, 1);
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-      });
-    }
-
-    // Otherwise it's yyyy-mm-dd format
     const date = new Date(isoString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
@@ -188,12 +177,6 @@ export default class VersionsTable extends Component {
       return false;
     }
 
-    // If it's yyyy-mm format (imprecise), always consider it "planned"
-    if (/^\d{4}-\d{2}$/.test(isoString)) {
-      return true;
-    }
-
-    // Otherwise it's yyyy-mm-dd format - check if it's in the future
     const date = new Date(isoString);
     const now = new Date();
     return date > now;
