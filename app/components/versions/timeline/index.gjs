@@ -6,29 +6,12 @@ import TimelineLegend from "./timeline-legend";
 import TimelineRow from "./timeline-row";
 import TodayIndicator from "./today-indicator";
 
-// Normalize date strings - convert "yyyy-mm" to "yyyy-mm-dd" (last day of month)
-function normalizeDate(dateString) {
-  if (!dateString) {
-    return null;
-  }
-  if (/^\d{4}-\d{2}$/.test(dateString)) {
-    const [year, month] = dateString.split("-");
-    const lastDay = new Date(
-      parseInt(year, 10),
-      parseInt(month, 10),
-      0
-    ).getDate();
-    return `${year}-${month}-${lastDay}`;
-  }
-  return dateString;
-}
-
 // Convert a date to a percentage position within the timeline range
 function dateToPercent(date, minDate, totalDays) {
   if (!date) {
     return 0;
   }
-  const d = new Date(normalizeDate(date));
+  const d = new Date(date);
   const days = (d - minDate) / (1000 * 60 * 60 * 24);
   return (days / totalDays) * 100;
 }
