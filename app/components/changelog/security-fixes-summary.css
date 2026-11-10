@@ -62,7 +62,7 @@
   border-bottom: none;
 }
 
-.advisory-cve {
+.advisory-id {
   flex-shrink: 0;
   font-family: "SF Mono", Monaco, Menlo, "Ubuntu Mono", monospace;
   font-size: 0.8rem;

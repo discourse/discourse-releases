@@ -196,7 +196,7 @@ module("Acceptance | changelog version", function (hooks) {
 
     // Expand to see details
     await click(".summary-header");
-    assert.dom(".advisory-cve").hasText(/CVE-/);
+    assert.dom(".advisory-id").hasText(/CVE-/);
     assert.dom(".advisory-title").exists();
     assert
       .dom(".advisory-link")

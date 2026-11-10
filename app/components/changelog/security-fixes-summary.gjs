@@ -20,8 +20,8 @@ export default class SecurityFixesSummary extends Component {
     return this.count === 1 ? "1 security fix" : `${this.count} security fixes`;
   }
 
-  getCveDisplay(advisory) {
-    return advisory.cve_id || "(CVE Pending)";
+  advisoryId(advisory) {
+    return advisory.cve_id || advisory.ghsa_id;
   }
 
   <template>
@@ -46,7 +46,7 @@ export default class SecurityFixesSummary extends Component {
         <ul class="advisories-list">
           {{#each @advisories as |advisory|}}
             <li class="advisory-item">
-              <span class="advisory-cve">{{this.getCveDisplay advisory}}</span>
+              <span class="advisory-id">{{this.advisoryId advisory}}</span>
               <span class="advisory-title">{{advisory.summary}}</span>
               <a
                 href={{advisory.html_url}}
